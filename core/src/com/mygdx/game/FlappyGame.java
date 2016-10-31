@@ -7,7 +7,6 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.graphics.shapes.*;
@@ -27,7 +26,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 	private float fov = 90.0f;
 
-	MeshModel model;
+	MeshModel model3D;
 
 	private Texture tex;
 
@@ -49,7 +48,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//For Desktop App
 		tex = new Texture(Gdx.files.internal("core/assets/textures/dice.png"));
 
-		model = G3DJModelLoader.loadG3DJFromFile("testModel.g3dj");
+		model3D = G3DJModelLoader.loadG3DJFromFile("/helicopter/helicopter.g3dj");
 
 		BoxGraphic.create();
 		SphereGraphic.create();
@@ -119,10 +118,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//cam.rotateY(-90.0f * deltaTime);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			cam.pitch(-90.0f * deltaTime);
+			cam.pitch(90.0f * deltaTime);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			cam.pitch(90.0f * deltaTime);
+
+			cam.pitch(-90.0f * deltaTime);
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
@@ -228,7 +228,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 			BoxGraphic.drawSolidCube(shader, tex);
-			//model.draw(shader);
+			model3D.draw(shader);
 
 			ModelMatrix.main.popMatrix();
 
