@@ -47,6 +47,11 @@ public class Shader {
 		String vertexShaderString;
 		String fragmentShaderString;
 
+		//For Android
+		//vertexShaderString = Gdx.files.internal("shaders/fragmentLighting3D.vert").readString();
+		//fragmentShaderString =  Gdx.files.internal("shaders/fragmentLighting3D.frag").readString();
+
+		//For Desktop App
 		vertexShaderString = Gdx.files.internal("core/assets/shaders/fragmentLighting3D.vert").readString();
 		fragmentShaderString =  Gdx.files.internal("core/assets/shaders/fragmentLighting3D.frag").readString();
 

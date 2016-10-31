@@ -12,7 +12,12 @@ public class G3DJModelLoader {
 	{
 		MeshModel model = new MeshModel();
 
+		//For Android
+		//JsonObject graph = (JsonObject)JsonReader.jsonToMaps(Gdx.files.internal("models/" + fileName).readString());
+
+		//For Desktop App
 		JsonObject graph = (JsonObject)JsonReader.jsonToMaps(Gdx.files.internal("core/assets/models/" + fileName).readString());
+
 		//System.out.println(graph);
 		short[] version = getShortArray(graph, "version");
 		for(int number : version)

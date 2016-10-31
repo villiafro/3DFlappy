@@ -43,6 +43,10 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		shader = new Shader();
 
+		//For Android
+		//tex = new Texture(Gdx.files.internal("textures/dice.png"));
+
+		//For Desktop App
 		tex = new Texture(Gdx.files.internal("core/assets/textures/dice.png"));
 
 		model = G3DJModelLoader.loadG3DJFromFile("testModel.g3dj");
