@@ -46,9 +46,9 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//tex = new Texture(Gdx.files.internal("textures/dice.png"));
 
 		//For Desktop App
-		tex = new Texture(Gdx.files.internal("core/assets/textures/dice.png"));
+		tex = new Texture(Gdx.files.internal("core/assets/textures/army.jpg"));
 
-		model3D = G3DJModelLoader.loadG3DJFromFile("/helicopter/helicopter.g3dj");
+		model3D = G3DJModelLoader.loadG3DJFromFile("/minimal/heli.g3dj", true);
 
 		BoxGraphic.create();
 		SphereGraphic.create();
@@ -155,12 +155,14 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
 		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-/*
+
+		/*
 		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		//Gdx.gl.glBlendFunc(GL20.GL_ONE, GL20.GL_ONE);
-		//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-*/
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
+		*/
+
 		for(int viewNum = 0; viewNum < 2; viewNum++)
 		{
 			if(viewNum == 0)
@@ -224,11 +226,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 			ModelMatrix.main.pushMatrix();
 			ModelMatrix.main.addTranslation(0.0f, 4.0f, 0.0f);
-			ModelMatrix.main.addRotation(angle, new Vector3D(1,1,1));
+			//ModelMatrix.main.addRotation(angle, new Vector3D(1,1,1));
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
-			BoxGraphic.drawSolidCube(shader, tex);
-			model3D.draw(shader);
+			//BoxGraphic.drawSolidCube(shader, tex);
+			model3D.draw(shader, tex);
 
 			ModelMatrix.main.popMatrix();
 
@@ -294,8 +296,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 						}
 						shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
-						BoxGraphic.drawSolidCube(shader, null);
-						//BoxGraphic.drawSolidCube(shader, tex);
+						//BoxGraphic.drawSolidCube(shader, null);
+                        BoxGraphic.drawSolidCube(shader, null);
 						ModelMatrix.main.popMatrix();
 					}
 					ModelMatrix.main.popMatrix();

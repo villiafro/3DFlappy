@@ -8,7 +8,7 @@ import com.mygdx.graphics.Material;
 
 public class G3DJModelLoader {
 
-	public static MeshModel loadG3DJFromFile(String fileName)
+	public static MeshModel loadG3DJFromFile(String fileName, boolean buildSphericalUVMap)
 	{
 		MeshModel model = new MeshModel();
 
@@ -214,6 +214,14 @@ public class G3DJModelLoader {
 			}
 
 			model.nodes.add(node);
+		}
+
+		if(buildSphericalUVMap)
+		{
+			for(Mesh mesh : model.meshes)
+			{
+				mesh.buildSphericalUVMap();
+			}
 		}
 		
 		return model;

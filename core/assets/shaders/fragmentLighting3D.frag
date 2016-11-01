@@ -72,5 +72,5 @@ void main()
 
 	//gl_FragColor = u_globalAmbient + u_materialEmission + light1CalcColor;
 	gl_FragColor = u_globalAmbient * materialDiffuse + u_materialEmission + light1CalcColor;
-	//gl_FragColor.a = 0.5;
+	gl_FragColor.a = 0.5;
 }
