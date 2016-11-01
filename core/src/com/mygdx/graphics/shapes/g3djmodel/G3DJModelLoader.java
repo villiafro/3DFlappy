@@ -48,7 +48,7 @@ public class G3DJModelLoader {
 				if(attributes[attributeNum].equals("COLORPACKED")) { vertexFill += 1; }
 				if(attributes[attributeNum].equals("TANGENT")) { vertexFill += 3; }
 				if(attributes[attributeNum].equals("BINORMAL")) { vertexFill += 3; }
-				if(attributes[attributeNum].equals("TEXCOORD")) { vertexFill += 2; }
+				if(attributes[attributeNum].equals("TEXCOORD0")) { vertexFill += 2; }
 				if(attributes[attributeNum].equals("BLENDWEIGHT")) { vertexFill += 2; }
 			}
 

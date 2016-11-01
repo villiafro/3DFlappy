@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.graphics.Material;
 import com.mygdx.graphics.ModelMatrix;
 import com.mygdx.graphics.Shader;
-import com.sun.javafx.sg.prism.NGShape;
 
 public class MeshModel {
 	public Vector<Mesh> meshes;
