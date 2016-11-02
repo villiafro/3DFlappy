@@ -44,14 +44,14 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader = new Shader();
 
 		//For Android
-		//tex = new Texture(Gdx.files.internal("textures/dice.png"));
-		//texArmy = new Texture(Gdx.files.internal("textures/metal.jpg"));
+		//tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
+		//texArmy = new Texture(Gdx.files.internal("textures/silver.jpg"));
 
 		//For Desktop App
 		tex = new Texture(Gdx.files.internal("core/assets/textures/phobos2k.png"));
 		texArmy = new Texture(Gdx.files.internal("core/assets/textures/silver.jpg"));
 
-		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/planenew.g3dj", true);
+		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/planecolor.g3dj", true);
 
 		BoxGraphic.create();
 		SphereGraphic.create();
@@ -239,7 +239,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 		//BoxGraphic.drawSolidCube(shader, tex);
-		model3D.draw(shader, texArmy);//tex);
+		model3D.draw(shader, null);//tex);
 
 		ModelMatrix.main.popMatrix();
 
@@ -271,7 +271,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		SphereGraphic.drawSolidSphere(shader, tex, null);
 		ModelMatrix.main.popMatrix();
-
 	}
 
 	@Override
