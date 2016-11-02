@@ -30,6 +30,8 @@ public class Shader {
 	//private int colorLoc;
 	private int lightPosLoc;
 
+	private int lightPosLocPlane;
+
 	private int spotDirLoc;
 	private int spotExpLoc;
 	private int constantAttLoc;
@@ -98,6 +100,8 @@ public class Shader {
 
 		lightPosLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPosition");
 
+		lightPosLocPlane		= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_lightPositionPlane");
+
 		spotDirLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_spotDirection");
 		spotExpLoc				= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_spotExponent");
 		constantAttLoc			= Gdx.gl.glGetUniformLocation(renderingProgramID, "u_constantAttenuation");
@@ -151,6 +155,12 @@ public class Shader {
 	{
 		Gdx.gl.glUniform4f(lightPosLoc, x, y, z, w);
 	}
+
+	public void setLightPositionPlane(float x, float y, float z, float w)
+	{
+		Gdx.gl.glUniform4f(lightPosLocPlane, x, y, z, w);
+	}
+
 
 	public void setSpotDirection(float x, float y, float z, float w)
 	{

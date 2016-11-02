@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -14,6 +15,7 @@ import com.mygdx.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.mygdx.graphics.shapes.g3djmodel.MeshModel;
 
 import com.mygdx.graphics.*;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 
 public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
@@ -24,14 +26,20 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	private Camera cam;
 	//private Camera topCam;
 
-	private float fov = 90.0f;
+	private float fov = 120.0f;
 
 	MeshModel model3D;
 
 	private Texture tex;
 	private Texture texArmy;
 
-	Random rand = new Random();
+	private Random rand;
+
+	private static Cell[] cells;
+
+	int stages;
+
+	Plane plane;
 
 	@Override
 	public void create () {
@@ -45,23 +53,22 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		//For Android
 		//tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
-		//texArmy = new Texture(Gdx.files.internal("textures/silver.jpg"));
 
 		//For Desktop App
 		tex = new Texture(Gdx.files.internal("core/assets/textures/phobos2k.png"));
-		texArmy = new Texture(Gdx.files.internal("core/assets/textures/silver.jpg"));
 
-		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/planecolor.g3dj", true);
+		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/plane.g3dj", true);
 
 		BoxGraphic.create();
 		SphereGraphic.create();
+		plane = new Plane();
 
 		ModelMatrix.main = new ModelMatrix();
 		ModelMatrix.main.loadIdentityMatrix();
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 		cam = new Camera();
-		cam.look(new Point3D(0f, 8f, -8f), new Point3D(0,4,0), new Vector3D(0,1,0));
+		cam.look(new Point3D(0f, 4f, -4f), new Point3D(0,4,0), new Vector3D(0,1,0));
 
 		//topCam = new Camera();
 		//orthoCam.orthographicProjection(-5, 5, -5, 5, 3.0f, 100);
@@ -77,6 +84,29 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			}
 		}
 		tex = new Texture(pm);*/
+
+		stages = 10;
+
+		rand = new Random();
+
+		Cave cave = new Cave();
+		cells = cave.getCells();
+
+		for(int i = 0; i < stages; i++){
+			int randNR = rand.nextInt(4);
+			if(randNR == 0){
+				cells[i].setCell(true,false,false,false);
+			}
+			else if(randNR == 1){
+				cells[i].setCell(false,true,false,false);
+			}
+			else if(randNR == 2){
+				cells[i].setCell(false,false,true,false);
+			}
+			else{
+				cells[i].setCell(false,false,false,true);
+			}
+		}
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	}
@@ -97,21 +127,29 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		angle += 180.0f * deltaTime;
 
+		cam.slide(0, 0, -3.0f * deltaTime);
+		updatePlane(0, 0, -3.0f * deltaTime);
+
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			cam.slide(-3.0f * deltaTime, 0, 0);
+			//cam.slide(-3.0f * deltaTime, 0, 0);
 			updatePlane(-3.0f * deltaTime, 0, 0);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			cam.slide(3.0f * deltaTime, 0, 0);
+			//cam.slide(3.0f * deltaTime, 0, 0);
 			updatePlane(3.0f * deltaTime, 0, 0);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			cam.slide(0, 0, -3.0f * deltaTime);
-			updatePlane(0, 0, -3.0f * deltaTime);
+			//cam.slide(0, 0, -3.0f * deltaTime);
+			//updatePlane(0, 0, -3.0f * deltaTime);
+			//cam.slide(0, 3.0f * deltaTime, 0);
+			updatePlane(0, -3.0f * deltaTime, 0);
+
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-			cam.slide(0, 0, 3.0f * deltaTime);
-			updatePlane(0, 0, 3.0f * deltaTime);
+			//cam.slide(0, 0, 3.0f * deltaTime);
+			//updatePlane(0, 0, 3.0f * deltaTime);
+			//cam.slide(0, -3.0f * deltaTime, 0);
+			updatePlane(0, 3.0f * deltaTime, 0);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
 			cam.slide(0, 3.0f * deltaTime, 0);
@@ -144,12 +182,12 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			cam.roll(90.0f * deltaTime);
 		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.T)) {
+		/*if(Gdx.input.isKeyPressed(Input.Keys.T)) {
 			fov -= 30.0f * deltaTime;
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.G)) {
 			fov += 30.0f * deltaTime;
-		}
+		}*/
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
 		{
@@ -210,6 +248,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//shader.setLightPosition(3.0f, 4.0f, 0.0f, 1.0f);
 		//shader.setLightPosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
 
+		//lights that follow plane
+		shader.setLightPositionPlane(cam.eye.x,5,cam.eye.z,1);
 
 		float s2 = Math.abs((float)Math.sin((angle / 1.312) * Math.PI / 180.0));
 		float c2 = Math.abs((float)Math.cos((angle / 1.312) * Math.PI / 180.0));
@@ -239,11 +279,16 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 		//BoxGraphic.drawSolidCube(shader, tex);
-		model3D.draw(shader, null);//tex);
+		//ModelMatrix.main.pushMatrix();
+		//plane.getHeli();
+		//shader.setModelMatrix(ModelMatrix.main.getMatrix());
+		model3D.draw(shader, null);
+		//ModelMatrix.main.popMatrix();
+
 
 		ModelMatrix.main.popMatrix();
 
-		drawPyramids();
+		drawCourse();
 
 	}
 
@@ -257,7 +302,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 	}
 
-	private void drawPyramids()
+	private void drawCourse()
 	{
 		shader.setMaterialDiffuse(0.8f, 0.8f, 0.2f, 1.0f);
 		shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
@@ -265,12 +310,79 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setMaterialEmission(0, 0, 0, 1);
 		ModelMatrix.main.addTranslation(0.0f, 0.0f, -7.0f);
 
-		ModelMatrix.main.addTranslation(0.55f, 1.0f, -0.55f);
-		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addScale(10f, 10f, 100f);
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		SphereGraphic.drawSolidSphere(shader, tex, null);
-		ModelMatrix.main.popMatrix();
+
+		for(int i = 0; i < stages; i++){
+			//bottom
+			ModelMatrix.main.addTranslation(0f, 0f, 10f);
+			ModelMatrix.main.pushMatrix();
+			ModelMatrix.main.addScale(10f, 1f, 10f);
+			shader.setModelMatrix(ModelMatrix.main.getMatrix());
+			BoxGraphic.drawSolidCube(shader, tex);
+			ModelMatrix.main.popMatrix();
+
+			//left
+			ModelMatrix.main.pushMatrix();
+			ModelMatrix.main.addTranslation(5f, 5f, 0f);
+			ModelMatrix.main.addScale(1f, 10f, 10f);
+			shader.setModelMatrix(ModelMatrix.main.getMatrix());
+			BoxGraphic.drawSolidCube(shader, tex);
+			ModelMatrix.main.popMatrix();
+
+			//right
+			ModelMatrix.main.pushMatrix();
+			ModelMatrix.main.addTranslation(-5f, 5f, 0f);
+			ModelMatrix.main.addScale(1f, 10f, 10f);
+			shader.setModelMatrix(ModelMatrix.main.getMatrix());
+			BoxGraphic.drawSolidCube(shader, tex);
+			ModelMatrix.main.popMatrix();
+
+			//top
+			ModelMatrix.main.pushMatrix();
+			ModelMatrix.main.addTranslation(0f, 10f, 0f);
+			ModelMatrix.main.addScale(10f, 1f, 10f);
+			shader.setModelMatrix(ModelMatrix.main.getMatrix());
+			BoxGraphic.drawSolidCube(shader, tex);
+			ModelMatrix.main.popMatrix();
+
+
+			if(!cells[i].isUpperRight()){
+				//upper right
+				ModelMatrix.main.pushMatrix();
+				ModelMatrix.main.addTranslation(2.5f, 7.5f, 0f);
+				ModelMatrix.main.addScale(5f, 5f, 1f);
+				shader.setModelMatrix(ModelMatrix.main.getMatrix());
+				BoxGraphic.drawSolidCube(shader, tex);
+				ModelMatrix.main.popMatrix();
+			}
+			if(!cells[i].isUpperLeft()){
+				//upper left
+				ModelMatrix.main.pushMatrix();
+				ModelMatrix.main.addTranslation(-2.5f, 7.5f, 0f);
+				ModelMatrix.main.addScale(5f, 5f, 1f);
+				shader.setModelMatrix(ModelMatrix.main.getMatrix());
+				BoxGraphic.drawSolidCube(shader, tex);
+				ModelMatrix.main.popMatrix();
+			}
+			if(!cells[i].isDownerRight()){
+				//upper left
+				ModelMatrix.main.pushMatrix();
+				ModelMatrix.main.addTranslation(2.5f, 2.5f, 0f);
+				ModelMatrix.main.addScale(5f, 5f, 1f);
+				shader.setModelMatrix(ModelMatrix.main.getMatrix());
+				BoxGraphic.drawSolidCube(shader, tex);
+				ModelMatrix.main.popMatrix();
+			}
+			if(!cells[i].isDownerLeft()){
+				//upper left
+				ModelMatrix.main.pushMatrix();
+				ModelMatrix.main.addTranslation(-2.5f, 2.5f, 0f);
+				ModelMatrix.main.addScale(5f, 5f, 1f);
+				shader.setModelMatrix(ModelMatrix.main.getMatrix());
+				BoxGraphic.drawSolidCube(shader, tex);
+				ModelMatrix.main.popMatrix();
+			}
+
+		}
 	}
 
 	@Override

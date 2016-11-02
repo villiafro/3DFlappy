@@ -16,10 +16,16 @@ uniform vec4 u_eyePosition;
 
 uniform vec4 u_lightPosition;
 
+uniform vec4 u_lightPositionPlane;
+
 varying vec2 v_uv;
+
 varying vec4 v_normal;
 varying vec4 v_s;
 varying vec4 v_h;
+
+varying vec4 v_sPlane;
+varying vec4 v_hPlane;
 
 void main()
 {
@@ -42,6 +48,11 @@ void main()
 	vec4 v = normalize(u_eyePosition - position); //direction to the camera
 	
 	v_h = v_s + v;
+
+
+    v_sPlane = normalize(u_lightPositionPlane - position); //direction to the light
+
+    v_hPlane = v_s + v;
 
 
 

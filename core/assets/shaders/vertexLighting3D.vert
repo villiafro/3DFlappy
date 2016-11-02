@@ -17,6 +17,8 @@ uniform vec4 u_globalAmbient;
 
 uniform vec4 u_lightPosition;
 
+uniform vec4 u_lightPositionPlane;
+
 uniform vec4 u_spotDirection;
 uniform float u_spotExponent;
 
@@ -53,6 +55,8 @@ void main()
 	vec4 v = u_eyePosition - position; //direction to the camera
 
 	//for each light
+
+	//LIGHT 1
 	vec4 s = u_lightPosition - position; //direction to the light
 	
 	vec4 h = s + v;
@@ -76,12 +80,38 @@ void main()
 		
 	vec4 light1CalcColor = attenuation * diffuseColor;
 	vec4 light1SpecColor = attenuation * specularColor;
+
+	//LIGHT 2
+	s = u_lightPositionPlane - position; //direction to the light
+
+    h = s + v;
+
+    length_s = length(s);
+
+    lambert = max(0.0, dot(normal, s) / (length(normal) * length(s)));
+    phong = max(0.0, dot(normal, h) / (length(normal) * length(h)));
+
+    diffuseColor = lambert * u_lightColor * u_materialDiffuse;
+    specularColor = pow(phong, u_materialShininess) * u_lightColor * u_materialSpecular;
+
+    attenuation = 1.0;
+    if(u_spotExponent != 0.0)
+    {
+        float spotAttenuation = max(0.0, dot(-s, u_spotDirection) / (length_s * length(u_spotDirection)));
+        spotAttenuation = pow(spotAttenuation, u_spotExponent);
+        attenuation *= spotAttenuation;
+    }
+    attenuation *= 1.0 / (u_constantAttenuation + length_s * u_linearAttenuation + pow(length_s, 2) * u_quadraticAttenuation);
+
+    vec4 light2CalcColor = attenuation * diffuseColor;
+    vec4 light2SpecColor = attenuation * specularColor;
+
 	// end for each light
 	
 	
 	
-	v_mainColor = u_globalAmbient * u_materialDiffuse + u_materialEmission + light1CalcColor;
-	v_specColor = light1SpecColor;
+	v_mainColor = u_globalAmbient * u_materialDiffuse + u_materialEmission + light1CalcColor + light2CalcColor;
+	v_specColor = light1SpecColor + light2SpecColor;
 	
 	v_uv = a_uv;
 

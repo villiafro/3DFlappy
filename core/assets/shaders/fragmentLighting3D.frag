@@ -30,6 +30,9 @@ varying vec4 v_normal;
 varying vec4 v_s;
 varying vec4 v_h;
 
+varying vec4 v_sPlane;
+varying vec4 v_hPlane;
+
 void main()
 {
 	vec4 materialDiffuse;
@@ -45,7 +48,7 @@ void main()
 	vec4 materialSpecular = u_materialSpecular;
 
 	//Lighting
-	
+	//LIGHT 1
 	float length_s = length(v_s);
 	
 	float lambert = max(0.0, dot(v_normal, v_s) / (length(v_normal) * length_s));
@@ -66,11 +69,32 @@ void main()
 		
 	vec4 light1CalcColor = attenuation * (diffuseColor + specularColor);
 
+    //LIGHT 2
+    length_s = length(v_sPlane);
+
+    lambert = max(0.0, dot(v_normal, v_sPlane) / (length(v_normal) * length_s));
+    phong = max(0.0, dot(v_normal, v_hPlane) / (length(v_normal) * length(v_h)));
+
+    diffuseColor = lambert * u_lightColor * materialDiffuse;
+
+    specularColor = pow(phong, u_materialShininess) * u_lightColor * materialSpecular;
+
+    attenuation = 1.0;
+    if(u_spotExponent != 0.0)
+    {
+        float spotAttenuation = max(0.0, dot(-v_sPlane, u_spotDirection) / (length_s * length(u_spotDirection)));
+        spotAttenuation = pow(spotAttenuation, u_spotExponent);
+        attenuation *= spotAttenuation;
+    }
+    attenuation *= 1.0 / (u_constantAttenuation + length_s * u_linearAttenuation + pow(length_s, 2.0) * u_quadraticAttenuation);
+
+    vec4 light2CalcColor = attenuation * (diffuseColor + specularColor);
+
 	// end for each light
 	
 	
 
 	//gl_FragColor = u_globalAmbient + u_materialEmission + light1CalcColor;
-	gl_FragColor = u_globalAmbient * materialDiffuse + u_materialEmission + light1CalcColor;
+	gl_FragColor = u_globalAmbient * materialDiffuse + u_materialEmission + light1CalcColor + light2CalcColor;
 	gl_FragColor.a = 0.5;
 }
