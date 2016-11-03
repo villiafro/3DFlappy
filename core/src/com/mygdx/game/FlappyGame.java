@@ -31,7 +31,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	MeshModel model3D;
 
 	private Texture tex;
-	private Texture texArmy;
+	private Texture world;
 
 	private Random rand;
 
@@ -56,6 +56,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		//For Desktop App
 		tex = new Texture(Gdx.files.internal("core/assets/textures/phobos2k.png"));
+		world = new Texture(Gdx.files.internal("core/assets/textures/spectex01.png"));
 
 		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/plane.g3dj", true);
 
@@ -115,12 +116,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	{
 	}
 
-	private void updatePlane(float x, float y, float z){
-		for(int i = 0; i < model3D.nodes.size(); i++){
-			model3D.nodes.get(i).slide(x, y, z);
-		}
-	}
-
 	private void update()
 	{
 		float deltaTime = Gdx.graphics.getDeltaTime();
@@ -128,36 +123,55 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		angle += 180.0f * deltaTime;
 
 		cam.slide(0, 0, -3.0f * deltaTime);
-		updatePlane(0, 0, -3.0f * deltaTime);
+		plane.setMove(0, 0, -3.0f * deltaTime);
+		//updatePlane(0, 0, -3.0f * deltaTime);
 
 		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
 			//cam.slide(-3.0f * deltaTime, 0, 0);
-			updatePlane(-3.0f * deltaTime, 0, 0);
+			plane.setMove(-3.0f * deltaTime, 0, 0);
+			plane.setRotationSide(-30);
+			//updatePlane(-3.0f * deltaTime, 0, 0);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
 			//cam.slide(3.0f * deltaTime, 0, 0);
-			updatePlane(3.0f * deltaTime, 0, 0);
+			plane.setMove(3.0f * deltaTime, 0, 0);
+			plane.setRotationSide(30);
+			//updatePlane(3.0f * deltaTime, 0, 0);
 		}
+		if(!Gdx.input.isKeyPressed(Input.Keys.D) && !Gdx.input.isKeyPressed(Input.Keys.A)) {
+			plane.setRotationSide(0);
+		}
+
 		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
 			//cam.slide(0, 0, -3.0f * deltaTime);
 			//updatePlane(0, 0, -3.0f * deltaTime);
 			//cam.slide(0, 3.0f * deltaTime, 0);
-			updatePlane(0, -3.0f * deltaTime, 0);
-
+			plane.setMove(0, -3.0f * deltaTime, 0);
+			plane.setRotationUpDown(-30);
+			//updatePlane(0, -3.0f * deltaTime, 0);
 		}
+
 		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
 			//cam.slide(0, 0, 3.0f * deltaTime);
 			//updatePlane(0, 0, 3.0f * deltaTime);
 			//cam.slide(0, -3.0f * deltaTime, 0);
-			updatePlane(0, 3.0f * deltaTime, 0);
+			plane.setMove(0, 3.0f * deltaTime, 0);
+			plane.setRotationUpDown(30);
+			//updatePlane(0, 3.0f * deltaTime, 0);
 		}
+		if(!Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.W)) {
+			plane.setRotationUpDown(0);
+		}
+
 		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
 			cam.slide(0, 3.0f * deltaTime, 0);
-			updatePlane(0, -3.0f * deltaTime, 0);
+			plane.setMove(0, -3.0f * deltaTime, 0);
+			//updatePlane(0, -3.0f * deltaTime, 0);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
 			cam.slide(0, -3.0f * deltaTime, 0);
-			updatePlane(0, 3.0f * deltaTime, 0);
+			plane.setMove(0, 3.0f * deltaTime, 0);
+			//updatePlane(0, 3.0f * deltaTime, 0);
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -279,11 +293,14 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 		//BoxGraphic.drawSolidCube(shader, tex);
-		//ModelMatrix.main.pushMatrix();
-		//plane.getHeli();
-		//shader.setModelMatrix(ModelMatrix.main.getMatrix());
+		ModelMatrix.main.pushMatrix();
+		Point3D planeMove = plane.getMove();
+		ModelMatrix.main.addTranslation(planeMove.x, planeMove.y, planeMove.z);
+		ModelMatrix.main.addRotationZ(plane.getRotationSide());
+		ModelMatrix.main.addRotationX(plane.getRotationUpDown());
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		model3D.draw(shader, null);
-		//ModelMatrix.main.popMatrix();
+		ModelMatrix.main.popMatrix();
 
 
 		ModelMatrix.main.popMatrix();
@@ -310,14 +327,13 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setMaterialEmission(0, 0, 0, 1);
 		ModelMatrix.main.addTranslation(0.0f, 0.0f, -7.0f);
 
-
 		for(int i = 0; i < stages; i++){
 			//bottom
 			ModelMatrix.main.addTranslation(0f, 0f, 10f);
 			ModelMatrix.main.pushMatrix();
 			ModelMatrix.main.addScale(10f, 1f, 10f);
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
-			BoxGraphic.drawSolidCube(shader, tex);
+			BoxGraphic.drawSolidCube(shader, world);
 			ModelMatrix.main.popMatrix();
 
 			//left
@@ -325,7 +341,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			ModelMatrix.main.addTranslation(5f, 5f, 0f);
 			ModelMatrix.main.addScale(1f, 10f, 10f);
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
-			BoxGraphic.drawSolidCube(shader, tex);
+			BoxGraphic.drawSolidCube(shader, world);
 			ModelMatrix.main.popMatrix();
 
 			//right
@@ -333,7 +349,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			ModelMatrix.main.addTranslation(-5f, 5f, 0f);
 			ModelMatrix.main.addScale(1f, 10f, 10f);
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
-			BoxGraphic.drawSolidCube(shader, tex);
+			BoxGraphic.drawSolidCube(shader, world);
 			ModelMatrix.main.popMatrix();
 
 			//top
@@ -341,7 +357,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			ModelMatrix.main.addTranslation(0f, 10f, 0f);
 			ModelMatrix.main.addScale(10f, 1f, 10f);
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
-			BoxGraphic.drawSolidCube(shader, tex);
+			BoxGraphic.drawSolidCube(shader, world);
 			ModelMatrix.main.popMatrix();
 
 
