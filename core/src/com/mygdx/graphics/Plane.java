@@ -108,7 +108,12 @@ public class Plane {
         }
     }
     public void resetRotationSide(){
-        this.rotationSide = 0;
+        if(this.rotationSide < 0){
+            this.rotationSide += 5;
+        }
+        if(this.rotationSide > 0){
+            this.rotationSide -= 5;
+        }
     }
 
     public void setRotationUpDown(int rotationUpDown) {
@@ -118,7 +123,12 @@ public class Plane {
     }
 
     public void resetRotationUpDown(){
-        this.rotationUpDown = 0;
+        if(this.rotationUpDown < 0){
+            this.rotationUpDown += 5;
+        }
+        if(this.rotationUpDown > 0){
+            this.rotationUpDown -= 5;
+        }
     }
 
     public void setMove(float delU, float delV, float delN) {
