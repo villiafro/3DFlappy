@@ -133,17 +133,17 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		if(Gdx.input.isKeyPressed(Input.Keys.A) || plane.isMovingLeft()) {
 			//cam.slide(-3.0f * deltaTime, 0, 0);
 			plane.setMove(-3.0f * deltaTime, 0, 0);
-			plane.setRotationSide(-30);
+			plane.setRotationSide(-5);
 			//updatePlane(-3.0f * deltaTime, 0, 0);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.D) || plane.isMovingRight()) {
 			//cam.slide(3.0f * deltaTime, 0, 0);
 			plane.setMove(3.0f * deltaTime, 0, 0);
-			plane.setRotationSide(30);
+			plane.setRotationSide(5);
 			//updatePlane(3.0f * deltaTime, 0, 0);
 		}
 		if(!Gdx.input.isKeyPressed(Input.Keys.D) && !Gdx.input.isKeyPressed(Input.Keys.A)) {
-			plane.setRotationSide(0);
+			plane.resetRotationSide();
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.W) || plane.isMovingUp()) {
@@ -151,7 +151,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//updatePlane(0, 0, -3.0f * deltaTime);
 			//cam.slide(0, 3.0f * deltaTime, 0);
 			plane.setMove(0, -3.0f * deltaTime, 0);
-			plane.setRotationUpDown(-30);
+			plane.setRotationUpDown(-5);
 			//updatePlane(0, -3.0f * deltaTime, 0);
 		}
 
@@ -160,11 +160,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//updatePlane(0, 0, 3.0f * deltaTime);
 			//cam.slide(0, -3.0f * deltaTime, 0);
 			plane.setMove(0, 3.0f * deltaTime, 0);
-			plane.setRotationUpDown(30);
+			plane.setRotationUpDown(5);
 			//updatePlane(0, 3.0f * deltaTime, 0);
 		}
 		if(!Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.W)) {
-			plane.setRotationUpDown(0);
+			plane.resetRotationUpDown();
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
@@ -439,16 +439,16 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		if (!dragging) return false;
-		if(plane.getInitialDrag().y < screenY-10){
+		if(plane.getInitialDrag().y < screenY-50){
 			plane.setMovingDown();
 		}
-		else if(plane.getInitialDrag().y > screenY+10){
+		else if(plane.getInitialDrag().y > screenY+50){
 			plane.setMovingUp();
 		}
-		if(plane.getInitialDrag().x < screenX-10){
+		if(plane.getInitialDrag().x < screenX-50){
 			plane.setMovingRight();
 		}
-		else if(plane.getInitialDrag().x > screenX+10){
+		else if(plane.getInitialDrag().x > screenX+50){
 			plane.setMovingLeft();
 		}
 
