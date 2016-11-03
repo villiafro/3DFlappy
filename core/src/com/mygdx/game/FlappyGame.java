@@ -41,6 +41,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 	Plane plane;
 
+	boolean dragging;
+
 	@Override
 	public void create () {
 
@@ -86,6 +88,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		}
 		tex = new Texture(pm);*/
 
+		dragging = false;
+
 		stages = 10;
 
 		rand = new Random();
@@ -126,13 +130,13 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		plane.setMove(0, 0, -3.0f * deltaTime);
 		//updatePlane(0, 0, -3.0f * deltaTime);
 
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+		if(Gdx.input.isKeyPressed(Input.Keys.A) || plane.isMovingLeft()) {
 			//cam.slide(-3.0f * deltaTime, 0, 0);
 			plane.setMove(-3.0f * deltaTime, 0, 0);
 			plane.setRotationSide(-30);
 			//updatePlane(-3.0f * deltaTime, 0, 0);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+		if(Gdx.input.isKeyPressed(Input.Keys.D) || plane.isMovingRight()) {
 			//cam.slide(3.0f * deltaTime, 0, 0);
 			plane.setMove(3.0f * deltaTime, 0, 0);
 			plane.setRotationSide(30);
@@ -142,7 +146,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			plane.setRotationSide(0);
 		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+		if(Gdx.input.isKeyPressed(Input.Keys.W) || plane.isMovingUp()) {
 			//cam.slide(0, 0, -3.0f * deltaTime);
 			//updatePlane(0, 0, -3.0f * deltaTime);
 			//cam.slide(0, 3.0f * deltaTime, 0);
@@ -151,7 +155,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//updatePlane(0, -3.0f * deltaTime, 0);
 		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+		if(Gdx.input.isKeyPressed(Input.Keys.S) || plane.isMovingDown()) {
 			//cam.slide(0, 0, 3.0f * deltaTime);
 			//updatePlane(0, 0, 3.0f * deltaTime);
 			//cam.slide(0, -3.0f * deltaTime, 0);
@@ -418,17 +422,37 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		return false;
+		if (button != Input.Buttons.LEFT || pointer > 0) return false;
+		plane.setInitialDrag(screenX, screenY);
+		dragging = true;
+		return true;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		return false;
+		if (button != Input.Buttons.LEFT || pointer > 0) return false;
+		dragging = false;
+		plane.resetMovement();
+		return true;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		return false;
+		if (!dragging) return false;
+		if(plane.getInitialDrag().y < screenY){
+			plane.setMovingDown();
+		}
+		else if(plane.getInitialDrag().y > screenY){
+			plane.setMovingUp();
+		}
+		if(plane.getInitialDrag().x < screenX){
+			plane.setMovingRight();
+		}
+		else if(plane.getInitialDrag().x > screenX){
+			plane.setMovingLeft();
+		}
+
+		return true;
 	}
 
 	@Override
