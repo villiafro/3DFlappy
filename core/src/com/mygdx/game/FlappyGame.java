@@ -10,6 +10,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.graphics.shapes.*;
 import com.mygdx.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.mygdx.graphics.shapes.g3djmodel.MeshModel;
@@ -32,6 +36,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 	private Texture tex;
 	private Texture world;
+	private Texture menu;
 
 	private Random rand;
 
@@ -42,6 +47,9 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	Plane plane;
 
 	boolean dragging;
+
+	int score = 0;
+	boolean gameOver = true;
 
 	@Override
 	public void create () {
@@ -59,6 +67,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//For Desktop App
 		tex = new Texture(Gdx.files.internal("core/assets/textures/phobos2k.png"));
 		world = new Texture(Gdx.files.internal("core/assets/textures/spectex01.png"));
+		menu = new Texture(Gdx.files.internal("core/assets/textures/menu.png"));
 
 		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/plane.g3dj", true);
 
@@ -97,6 +106,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		Cave cave = new Cave();
 		cells = cave.getCells();
 
+
+
 		for(int i = 0; i < stages; i++){
 			int randNR = rand.nextInt(4);
 			if(randNR == 0){
@@ -124,11 +135,12 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	{
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
-		angle += 180.0f * deltaTime;
-
-		cam.slide(0, 0, -3.0f * deltaTime);
-		plane.setMove(0, 0, -3.0f * deltaTime);
-		//updatePlane(0, 0, -3.0f * deltaTime);
+		if(!gameOver){
+			angle += 180.0f * deltaTime;
+			cam.slide(0, 0, -3.0f * deltaTime);
+			plane.setMove(0, 0, -3.0f * deltaTime);
+			//updatePlane(0, 0, -3.0f * deltaTime);
+		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.A) || plane.isMovingLeft()) {
 			//cam.slide(-3.0f * deltaTime, 0, 0);
@@ -213,6 +225,10 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			Gdx.app.exit();
 		}
 
+		if(Gdx.input.isKeyPressed(Input.Keys.ENTER) || dragging){
+			gameOver = false;
+		}
+
 		//do all updates to the game
 	}
 
@@ -291,25 +307,30 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setMaterialEmission(0, 0, 0, 1);
 		shader.setShininess(50.0f);
 
-		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(0.0f, 4.0f, 0.0f);
-		//ModelMatrix.main.addRotation(angle, new Vector3D(1,1,1));
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
+		if(!gameOver){
+			ModelMatrix.main.pushMatrix();
+			ModelMatrix.main.addTranslation(0.0f, 4.0f, 0.0f);
+			//ModelMatrix.main.addRotation(angle, new Vector3D(1,1,1));
+			shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
-		//BoxGraphic.drawSolidCube(shader, tex);
-		ModelMatrix.main.pushMatrix();
-		Point3D planeMove = plane.getMove();
-		ModelMatrix.main.addTranslation(planeMove.x, planeMove.y, planeMove.z);
-		ModelMatrix.main.addRotationZ(plane.getRotationSide());
-		ModelMatrix.main.addRotationX(plane.getRotationUpDown());
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		model3D.draw(shader, null);
-		ModelMatrix.main.popMatrix();
+			ModelMatrix.main.pushMatrix();
+			Point3D planeMove = plane.getMove();
+			ModelMatrix.main.addTranslation(planeMove.x, planeMove.y, planeMove.z);
+			ModelMatrix.main.addRotationZ(plane.getRotationSide());
+			ModelMatrix.main.addRotationX(plane.getRotationUpDown());
+			shader.setModelMatrix(ModelMatrix.main.getMatrix());
+			model3D.draw(shader, null);
+			ModelMatrix.main.popMatrix();
 
+			ModelMatrix.main.popMatrix();
 
-		ModelMatrix.main.popMatrix();
+			drawCourse();
+		}
 
-		drawCourse();
+		else {
+			makeMenu();
+		}
+
 
 	}
 
@@ -320,7 +341,23 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//put the code inside the update and display methods, depending on the nature of the code
 		update();
 		display();
+	}
 
+	public void setGameOver() {
+		this.gameOver = false;
+	}
+
+	public void setScore() {
+		this.score++;
+	}
+
+	private void makeMenu(){
+		ModelMatrix.main.pushMatrix();
+		ModelMatrix.main.addTranslation(0f, 5f, 0f);
+		ModelMatrix.main.addScale(15f, 15f, 1f);
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
+		BoxGraphic.drawSolidCube(shader, menu);
+		ModelMatrix.main.popMatrix();
 	}
 
 	private void drawCourse()
