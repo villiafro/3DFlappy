@@ -439,16 +439,16 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		if (!dragging) return false;
-		if(plane.getInitialDrag().y < screenY){
+		if(plane.getInitialDrag().y < screenY-10){
 			plane.setMovingDown();
 		}
-		else if(plane.getInitialDrag().y > screenY){
+		else if(plane.getInitialDrag().y > screenY+10){
 			plane.setMovingUp();
 		}
-		if(plane.getInitialDrag().x < screenX){
+		if(plane.getInitialDrag().x < screenX-10){
 			plane.setMovingRight();
 		}
-		else if(plane.getInitialDrag().x > screenX){
+		else if(plane.getInitialDrag().x > screenX+10){
 			plane.setMovingLeft();
 		}
 

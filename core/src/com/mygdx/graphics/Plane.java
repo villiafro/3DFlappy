@@ -48,27 +48,20 @@ public class Plane {
     public void setMovingUp() {
         this.movingUp = true;
         this.movingDown = false;
-        this.movingLeft = false;
-        this.movingRight = false;
     }
 
     public void setMovingDown() {
         this.movingUp = false;
         this.movingDown = true;
-        this.movingLeft = false;
-        this.movingRight = false;
+
     }
 
     public void setMovingLeft() {
-        this.movingUp = false;
-        this.movingDown = false;
         this.movingLeft = true;
         this.movingRight = false;
     }
 
     public void setMovingRight() {
-        this.movingUp = false;
-        this.movingDown = false;
         this.movingLeft = false;
         this.movingRight = true;
     }
