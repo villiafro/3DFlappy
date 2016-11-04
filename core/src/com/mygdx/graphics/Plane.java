@@ -132,9 +132,22 @@ public class Plane {
     }
 
     public void setMove(float delU, float delV, float delN) {
-        this.move.x -= delU*u.x + delV*v.x + delN*n.x;
-        this.move.y -= delU*u.y + delV*v.y + delN*n.y;
+        float checkSide = this.move.x - delU*u.x + delV*v.x + delN*n.x;
+        float checkUp = this.move.y - delU*u.y + delV*v.y + delN*n.y;
+        if(this.move.x > checkSide && checkSide > -3.5f){
+            this.move.x = checkSide;
+        }
+        else if(this.move.x < checkSide && checkSide < 3.5f){
+            this.move.x = checkSide;
+        }
+        if(this.move.y > checkUp && checkUp > -3){
+            this.move.y = checkUp;
+        }
+        else if(this.move.y < checkUp && checkUp < 5){
+            this.move.y = checkUp;
+        }
         this.move.z -= delU*u.z + delV*v.z + delN*n.z;
+        System.out.println("x: " + move.x + " y: " + move.y + " z: " + move.z);
     }
 
     public void setInitialDrag(int x, int y) {

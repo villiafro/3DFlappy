@@ -51,6 +51,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	int score = 0;
 	boolean gameOver = true;
 
+	float movingSpeed = -3.0f;
+
 	@Override
 	public void create () {
 
@@ -137,9 +139,17 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		if(!gameOver){
 			angle += 180.0f * deltaTime;
-			cam.slide(0, 0, -3.0f * deltaTime);
-			plane.setMove(0, 0, -3.0f * deltaTime);
+			cam.slide(0, 0, movingSpeed * deltaTime);
+			plane.setMove(0, 0, movingSpeed * deltaTime);
 			//updatePlane(0, 0, -3.0f * deltaTime);
+		}
+
+		if(plane.getMove().z > 100){
+			plane.setMove(0, 0, movingSpeed * deltaTime);
+		}
+		if(plane.getMove().z > 110){
+			movingSpeed -= 1;
+			create();
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.A) || plane.isMovingLeft()) {
@@ -162,7 +172,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//cam.slide(0, 0, -3.0f * deltaTime);
 			//updatePlane(0, 0, -3.0f * deltaTime);
 			//cam.slide(0, 3.0f * deltaTime, 0);
-			plane.setMove(0, -3.0f * deltaTime, 0);
+			plane.setMove(0, 3.0f * deltaTime, 0);
 			plane.setRotationUpDown(-5);
 			//updatePlane(0, -3.0f * deltaTime, 0);
 		}
@@ -171,7 +181,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//cam.slide(0, 0, 3.0f * deltaTime);
 			//updatePlane(0, 0, 3.0f * deltaTime);
 			//cam.slide(0, -3.0f * deltaTime, 0);
-			plane.setMove(0, 3.0f * deltaTime, 0);
+			plane.setMove(0, -3.0f * deltaTime, 0);
 			plane.setRotationUpDown(5);
 			//updatePlane(0, 3.0f * deltaTime, 0);
 		}
@@ -226,6 +236,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.ENTER) || dragging){
+			score = 0;
 			gameOver = false;
 		}
 
@@ -288,20 +299,20 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		float s2 = Math.abs((float)Math.sin((angle / 1.312) * Math.PI / 180.0));
 		float c2 = Math.abs((float)Math.cos((angle / 1.312) * Math.PI / 180.0));
 
-		shader.setSpotDirection(s2, -0.3f, c2, 0.0f);
-		//shader.setSpotDirection(-cam.n.x, -cam.n.y, -cam.n.z, 0.0f);
+		//shader.setSpotDirection(s2, -0.3f, c2, 0.0f);
+		shader.setSpotDirection(-cam.n.x, -cam.n.y, -cam.n.z, 0.0f);
 		shader.setSpotExponent(0.0f);
 		shader.setConstantAttenuation(1.0f);
 		shader.setLinearAttenuation(0.00f);
 		shader.setQuadraticAttenuation(0.00f);
 
-		//shader.setLightColor(s2, 0.4f, c2, 1.0f);
-		shader.setLightColor(1.0f, 1.0f, 1.0f, 1.0f);
+		shader.setLightColor(s2, 0.4f, c2, 1.0f);
+		//shader.setLightColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
 
-		//shader.setMaterialDiffuse(s, 0.4f, c, 1.0f);
-		shader.setMaterialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+		shader.setMaterialDiffuse(s, 0.4f, c, 1.0f);
+		//shader.setMaterialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
 		shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
 		//shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
 		shader.setMaterialEmission(0, 0, 0, 1);
