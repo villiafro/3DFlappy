@@ -110,7 +110,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 
 
-		for(int i = 0; i < stages; i++){
+		for(int i = 1; i < stages; i++){
 			int randNR = rand.nextInt(4);
 			if(randNR == 0){
 				cells[i].setCell(true,false,false,false);

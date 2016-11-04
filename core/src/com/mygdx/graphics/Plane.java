@@ -156,6 +156,7 @@ public class Plane {
             setRotationUpDown(-5);
             moved = true;
         }
+
         this.move.z -= delU*u.z + delV*v.z + delN*n.z;
 
         if(moved){

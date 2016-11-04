@@ -10,10 +10,10 @@ public class Cell {
     boolean downerLeft;
 
     public Cell(){
-        upperRight = false;
-        upperLeft = false;
-        downerRight = false;
-        downerLeft = false;
+        upperRight = true;
+        upperLeft = true;
+        downerRight = true;
+        downerLeft = true;
     }
     public void setCell(boolean upR, boolean upL, boolean doR, boolean doL){
         upperRight = upR;
