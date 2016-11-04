@@ -38,6 +38,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	private Texture world;
 	private Texture menu;
 
+	private Texture stageImage;
+
 	private Random rand;
 
 	private static Cell[] cells;
@@ -51,10 +53,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	int score = 0;
 	boolean gameOver = true;
 
-	float movingSpeed = -3.0f;
+	float movingSpeed = 3.0f;
 
 	@Override
 	public void create () {
+
 
 		Gdx.input.setInputProcessor(this);
 
@@ -137,116 +140,120 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	{
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
-		if(!gameOver){
+		if(!gameOver) {
 			angle += 180.0f * deltaTime;
-			cam.slide(0, 0, movingSpeed * deltaTime);
-			plane.setMove(0, 0, movingSpeed * deltaTime);
+			cam.slide(0, 0, -movingSpeed * deltaTime);
+			plane.setMove(0, 0, -movingSpeed * deltaTime);
 			//updatePlane(0, 0, -3.0f * deltaTime);
-		}
 
-		if(plane.getMove().z > 100){
-			plane.setMove(0, 0, movingSpeed * deltaTime);
-		}
-		if(plane.getMove().z > 110){
-			score += 10;
-			movingSpeed -= 1;
 
-			System.out.println("Score: " + score);
-			create();
-		}
-
-		if(Gdx.input.isKeyPressed(Input.Keys.A) || plane.isMovingLeft()) {
-			//cam.slide(-3.0f * deltaTime, 0, 0);
-			if(plane.setMove(-3.0f * deltaTime, 0, 0)){
-				cam.slide(-3.0f * deltaTime, 0, 0);
+			if (plane.getMove().z > 100) {
+				plane.setMove(0, 0, -movingSpeed * deltaTime);
 			}
-			//plane.setRotationSide(-5);
-			//updatePlane(-3.0f * deltaTime, 0, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.D) || plane.isMovingRight()) {
-			//cam.slide(3.0f * deltaTime, 0, 0);
-			if(plane.setMove(3.0f * deltaTime, 0, 0)){
-				cam.slide(3.0f * deltaTime, 0, 0);
+			if (plane.getMove().z > 110) {
+				score += 1;
+				movingSpeed += 1;
+
+				System.out.println("Score: " + score);
+				create();
 			}
-			//plane.setRotationSide(5);
-			//updatePlane(3.0f * deltaTime, 0, 0);
-		}
-		if(!Gdx.input.isKeyPressed(Input.Keys.D) && !Gdx.input.isKeyPressed(Input.Keys.A)) {
-			plane.resetRotationSide();
-		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.W) || plane.isMovingUp()) {
-			//cam.slide(0, 0, -3.0f * deltaTime);
-			//updatePlane(0, 0, -3.0f * deltaTime);
-			//cam.slide(0, 3.0f * deltaTime, 0);
-			if(plane.setMove(0, 3.0f * deltaTime, 0)){
-				cam.slide(0, 3.0f * deltaTime, 0);
+			if (Gdx.input.isKeyPressed(Input.Keys.A) || plane.isMovingLeft()) {
+				//cam.slide(-3.0f * deltaTime, 0, 0);
+				if (plane.setMove(-movingSpeed * deltaTime, 0, 0)) {
+					cam.slide(-movingSpeed * deltaTime, 0, 0);
+				}
+				//plane.setRotationSide(-5);
+				//updatePlane(-3.0f * deltaTime, 0, 0);
 			}
-			//plane.setRotationUpDown(-5);
-			//updatePlane(0, -3.0f * deltaTime, 0);
-		}
-
-		if(Gdx.input.isKeyPressed(Input.Keys.S) || plane.isMovingDown()) {
-			//cam.slide(0, 0, 3.0f * deltaTime);
-			//updatePlane(0, 0, 3.0f * deltaTime);
-			//cam.slide(0, -3.0f * deltaTime, 0);
-			if(plane.setMove(0, -3.0f * deltaTime, 0)){
-				cam.slide(0, -3.0f * deltaTime, 0);
+			if (Gdx.input.isKeyPressed(Input.Keys.D) || plane.isMovingRight()) {
+				//cam.slide(3.0f * deltaTime, 0, 0);
+				if (plane.setMove(movingSpeed * deltaTime, 0, 0)) {
+					cam.slide(movingSpeed * deltaTime, 0, 0);
+				}
+				//plane.setRotationSide(5);
+				//updatePlane(3.0f * deltaTime, 0, 0);
 			}
-			//plane.setRotationUpDown(5);
-			//updatePlane(0, 3.0f * deltaTime, 0);
-		}
-		if(!Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.W)) {
-			plane.resetRotationUpDown();
-		}
+			if (!Gdx.input.isKeyPressed(Input.Keys.D) && !Gdx.input.isKeyPressed(Input.Keys.A)) {
+				plane.resetRotationSide();
+			}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.R)) {
-			cam.slide(0, 3.0f * deltaTime, 0);
-			plane.setMove(0, -3.0f * deltaTime, 0);
-			//updatePlane(0, -3.0f * deltaTime, 0);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
-			cam.slide(0, -3.0f * deltaTime, 0);
-			plane.setMove(0, 3.0f * deltaTime, 0);
-			//updatePlane(0, 3.0f * deltaTime, 0);
-		}
+			if (Gdx.input.isKeyPressed(Input.Keys.W) || plane.isMovingUp()) {
+				//cam.slide(0, 0, -3.0f * deltaTime);
+				//updatePlane(0, 0, -3.0f * deltaTime);
+				//cam.slide(0, 3.0f * deltaTime, 0);
+				if (plane.setMove(0, movingSpeed * deltaTime, 0)) {
+					cam.slide(0, movingSpeed * deltaTime, 0);
+				}
+				//plane.setRotationUpDown(-5);
+				//updatePlane(0, -3.0f * deltaTime, 0);
+			}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-			cam.yaw(-90.0f * deltaTime);
-			//cam.rotateY(90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-			cam.yaw(90.0f * deltaTime);
-			//cam.rotateY(-90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			cam.pitch(90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			cam.pitch(-90.0f * deltaTime);
-		}
+			if (Gdx.input.isKeyPressed(Input.Keys.S) || plane.isMovingDown()) {
+				//cam.slide(0, 0, 3.0f * deltaTime);
+				//updatePlane(0, 0, 3.0f * deltaTime);
+				//cam.slide(0, -3.0f * deltaTime, 0);
+				if (plane.setMove(0, -movingSpeed * deltaTime, 0)) {
+					cam.slide(0, -movingSpeed * deltaTime, 0);
+				}
+				//plane.setRotationUpDown(5);
+				//updatePlane(0, 3.0f * deltaTime, 0);
+			}
+			if (!Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.W)) {
+				plane.resetRotationUpDown();
+			}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.Q)) {
-			cam.roll(-90.0f * deltaTime);
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.E)) {
-			cam.roll(90.0f * deltaTime);
-		}
+			/*if (Gdx.input.isKeyPressed(Input.Keys.R)) {
+				if(plane.setMove(0, -3.0f * deltaTime, 0)){
+					cam.slide(0, -3.0f * deltaTime, 0);
+				}
+				//updatePlane(0, -3.0f * deltaTime, 0);
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.F)) {
+				if(plane.setMove(0, 3.0f * deltaTime, 0)){
+					cam.slide(0, 3.0f * deltaTime, 0);
+				}
+				//updatePlane(0, 3.0f * deltaTime, 0);
+			}
 
-		/*if(Gdx.input.isKeyPressed(Input.Keys.T)) {
-			fov -= 30.0f * deltaTime;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.G)) {
-			fov += 30.0f * deltaTime;
-		}*/
+			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+				cam.yaw(-90.0f * deltaTime);
+				//cam.rotateY(90.0f * deltaTime);
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+				cam.yaw(90.0f * deltaTime);
+				//cam.rotateY(-90.0f * deltaTime);
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+				cam.pitch(90.0f * deltaTime);
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+				cam.pitch(-90.0f * deltaTime);
+			}
 
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE))
-		{
+			if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+				cam.roll(-90.0f * deltaTime);
+			}
+			if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+				cam.roll(90.0f * deltaTime);
+			}*/
+
+			/*if(Gdx.input.isKeyPressed(Input.Keys.T)) {
+				fov -= 30.0f * deltaTime;
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.G)) {
+				fov += 30.0f * deltaTime;
+			}*/
+
+
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			//Gdx.graphics.setDisplayMode(500, 500, false);
 			Gdx.app.exit();
 		}
 
-		if(Gdx.input.isKeyPressed(Input.Keys.ENTER) || dragging){
+
+		if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || dragging) {
 			score = 0;
 			gameOver = false;
 		}
@@ -369,16 +376,28 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		this.gameOver = false;
 	}
 
-	public void setScore() {
-		this.score++;
-	}
-
 	private void makeMenu(){
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(0f, 5f, 0f);
 		ModelMatrix.main.addScale(15f, 15f, 1f);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		BoxGraphic.drawSolidCube(shader, menu);
+		ModelMatrix.main.popMatrix();
+
+		String gameScore;
+		if(score > 10){
+			gameScore = "stageUN.png";
+		}
+		else{
+			gameScore = "stage"+score+".png";
+		}
+		stageImage = new Texture(Gdx.files.internal("core/assets/textures/"+gameScore));
+
+		ModelMatrix.main.pushMatrix();
+		ModelMatrix.main.addTranslation(-4f, 4.5f, -0.1f);
+		ModelMatrix.main.addScale(1f, 2f, 1f);
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
+		BoxGraphic.drawSolidCube(shader, stageImage);
 		ModelMatrix.main.popMatrix();
 	}
 
