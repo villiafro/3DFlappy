@@ -1,5 +1,6 @@
 package com.mygdx.graphics;
 
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.utils.BufferUtils;
 
 import java.awt.*;
@@ -131,23 +132,38 @@ public class Plane {
         }
     }
 
-    public void setMove(float delU, float delV, float delN) {
+    public boolean setMove(float delU, float delV, float delN) {
+        boolean moved = false;
         float checkSide = this.move.x - delU*u.x + delV*v.x + delN*n.x;
         float checkUp = this.move.y - delU*u.y + delV*v.y + delN*n.y;
         if(this.move.x > checkSide && checkSide > -3.5f){
             this.move.x = checkSide;
+            setRotationSide(5);
+            moved = true;
         }
         else if(this.move.x < checkSide && checkSide < 3.5f){
             this.move.x = checkSide;
+            setRotationSide(-5);
+            moved = true;
         }
         if(this.move.y > checkUp && checkUp > -3){
             this.move.y = checkUp;
+            setRotationUpDown(5);
+            moved = true;
         }
         else if(this.move.y < checkUp && checkUp < 5){
             this.move.y = checkUp;
+            setRotationUpDown(-5);
+            moved = true;
         }
         this.move.z -= delU*u.z + delV*v.z + delN*n.z;
-        System.out.println("x: " + move.x + " y: " + move.y + " z: " + move.z);
+
+        if(moved){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public void setInitialDrag(int x, int y) {

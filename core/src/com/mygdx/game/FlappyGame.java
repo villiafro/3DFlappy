@@ -148,20 +148,27 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			plane.setMove(0, 0, movingSpeed * deltaTime);
 		}
 		if(plane.getMove().z > 110){
+			score += 10;
 			movingSpeed -= 1;
+
+			System.out.println("Score: " + score);
 			create();
 		}
 
 		if(Gdx.input.isKeyPressed(Input.Keys.A) || plane.isMovingLeft()) {
 			//cam.slide(-3.0f * deltaTime, 0, 0);
-			plane.setMove(-3.0f * deltaTime, 0, 0);
-			plane.setRotationSide(-5);
+			if(plane.setMove(-3.0f * deltaTime, 0, 0)){
+				cam.slide(-3.0f * deltaTime, 0, 0);
+			}
+			//plane.setRotationSide(-5);
 			//updatePlane(-3.0f * deltaTime, 0, 0);
 		}
 		if(Gdx.input.isKeyPressed(Input.Keys.D) || plane.isMovingRight()) {
 			//cam.slide(3.0f * deltaTime, 0, 0);
-			plane.setMove(3.0f * deltaTime, 0, 0);
-			plane.setRotationSide(5);
+			if(plane.setMove(3.0f * deltaTime, 0, 0)){
+				cam.slide(3.0f * deltaTime, 0, 0);
+			}
+			//plane.setRotationSide(5);
 			//updatePlane(3.0f * deltaTime, 0, 0);
 		}
 		if(!Gdx.input.isKeyPressed(Input.Keys.D) && !Gdx.input.isKeyPressed(Input.Keys.A)) {
@@ -172,8 +179,10 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//cam.slide(0, 0, -3.0f * deltaTime);
 			//updatePlane(0, 0, -3.0f * deltaTime);
 			//cam.slide(0, 3.0f * deltaTime, 0);
-			plane.setMove(0, 3.0f * deltaTime, 0);
-			plane.setRotationUpDown(-5);
+			if(plane.setMove(0, 3.0f * deltaTime, 0)){
+				cam.slide(0, 3.0f * deltaTime, 0);
+			}
+			//plane.setRotationUpDown(-5);
 			//updatePlane(0, -3.0f * deltaTime, 0);
 		}
 
@@ -181,8 +190,10 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//cam.slide(0, 0, 3.0f * deltaTime);
 			//updatePlane(0, 0, 3.0f * deltaTime);
 			//cam.slide(0, -3.0f * deltaTime, 0);
-			plane.setMove(0, -3.0f * deltaTime, 0);
-			plane.setRotationUpDown(5);
+			if(plane.setMove(0, -3.0f * deltaTime, 0)){
+				cam.slide(0, -3.0f * deltaTime, 0);
+			}
+			//plane.setRotationUpDown(5);
 			//updatePlane(0, 3.0f * deltaTime, 0);
 		}
 		if(!Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -306,8 +317,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setLinearAttenuation(0.00f);
 		shader.setQuadraticAttenuation(0.00f);
 
-		shader.setLightColor(s2, 0.4f, c2, 1.0f);
-		//shader.setLightColor(1.0f, 1.0f, 1.0f, 1.0f);
+		//shader.setLightColor(s2, 0.4f, c2, 1.0f);
+		shader.setLightColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
 
