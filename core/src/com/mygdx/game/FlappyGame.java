@@ -37,6 +37,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	private Texture tex;
 	private Texture world;
 	private Texture menu;
+	private Texture sky;
 
 	private Texture stageImage;
 
@@ -70,8 +71,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
 
 		//For Desktop App
-		tex = new Texture(Gdx.files.internal("core/assets/textures/phobos2k.png"));
-		world = new Texture(Gdx.files.internal("core/assets/textures/spectex01.png"));
+		tex = new Texture(Gdx.files.internal("core/assets/textures/spectex01.png"));
+		sky = new Texture(Gdx.files.internal("core/assets/textures/testsky.png"));
+		//tex = new Texture(Gdx.files.internal("core/assets/textures/phobos2k.png"));
+		//world = new Texture(Gdx.files.internal("core/assets/textures/spectex01.png"));
+		world = new Texture(Gdx.files.internal("core/assets/textures/testwall.png"));
 		menu = new Texture(Gdx.files.internal("core/assets/textures/menu.png"));
 
 		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/plane.g3dj", true);
@@ -113,7 +117,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 
 
-		for(int i = 1; i < stages; i++){
+		for(int i = 2; i < stages; i++){
 			int randNR = rand.nextInt(4);
 			if(randNR == 0){
 				cells[i].setCell(true,false,false,false);
@@ -245,7 +249,14 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 				fov += 30.0f * deltaTime;
 			}*/
 
+			int cell = (int)(plane.getMove().z/10) + 1;
+			//System.out.println("cell is: " + cell);
+			if(cell < stages ){
 
+				if(plane.wallCollision(cells[cell])){
+					this.gameOver = true;
+				}
+			}
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
 			//Gdx.graphics.setDisplayMode(500, 500, false);
@@ -257,6 +268,13 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			score = 0;
 			gameOver = false;
 		}
+
+		/*else{
+			Cell bla = new Cell();
+			bla.setCell(false,false,false,false);
+			plane.wallCollision(bla);
+		}*/
+		//HAX
 
 		//do all updates to the game
 	}
@@ -407,12 +425,16 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
 		shader.setShininess(150.0f);
 		shader.setMaterialEmission(0, 0, 0, 1);
-		ModelMatrix.main.addTranslation(0.0f, 0.0f, -7.0f);
+		ModelMatrix.main.addTranslation(0.0f, 0.0f, -15.0f);
 
 		for(int i = 0; i < stages; i++){
-			//bottom
+
 			ModelMatrix.main.addTranslation(0f, 0f, 10f);
+
+			//bottom
 			ModelMatrix.main.pushMatrix();
+
+
 			ModelMatrix.main.addScale(10f, 1f, 10f);
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
 			BoxGraphic.drawSolidCube(shader, world);
@@ -439,7 +461,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			ModelMatrix.main.addTranslation(0f, 10f, 0f);
 			ModelMatrix.main.addScale(10f, 1f, 10f);
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
-			BoxGraphic.drawSolidCube(shader, world);
+			BoxGraphic.drawSolidCube(shader, sky);
 			ModelMatrix.main.popMatrix();
 
 
@@ -448,8 +470,9 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 				ModelMatrix.main.pushMatrix();
 				ModelMatrix.main.addTranslation(2.5f, 7.5f, 0f);
 				ModelMatrix.main.addScale(5f, 5f, 1f);
+				//ModelMatrix.main.addScale(1f, 1f, 1f);
 				shader.setModelMatrix(ModelMatrix.main.getMatrix());
-				BoxGraphic.drawSolidCube(shader, tex);
+				BoxGraphic.drawSolidCube(shader, world);
 				ModelMatrix.main.popMatrix();
 			}
 			if(!cells[i].isUpperLeft()){
@@ -458,7 +481,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 				ModelMatrix.main.addTranslation(-2.5f, 7.5f, 0f);
 				ModelMatrix.main.addScale(5f, 5f, 1f);
 				shader.setModelMatrix(ModelMatrix.main.getMatrix());
-				BoxGraphic.drawSolidCube(shader, tex);
+				BoxGraphic.drawSolidCube(shader, world);
 				ModelMatrix.main.popMatrix();
 			}
 			if(!cells[i].isDownerRight()){
@@ -467,7 +490,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 				ModelMatrix.main.addTranslation(2.5f, 2.5f, 0f);
 				ModelMatrix.main.addScale(5f, 5f, 1f);
 				shader.setModelMatrix(ModelMatrix.main.getMatrix());
-				BoxGraphic.drawSolidCube(shader, tex);
+				BoxGraphic.drawSolidCube(shader, world);
 				ModelMatrix.main.popMatrix();
 			}
 			if(!cells[i].isDownerLeft()){
@@ -476,7 +499,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 				ModelMatrix.main.addTranslation(-2.5f, 2.5f, 0f);
 				ModelMatrix.main.addScale(5f, 5f, 1f);
 				shader.setModelMatrix(ModelMatrix.main.getMatrix());
-				BoxGraphic.drawSolidCube(shader, tex);
+				BoxGraphic.drawSolidCube(shader, world);
 				ModelMatrix.main.popMatrix();
 			}
 
