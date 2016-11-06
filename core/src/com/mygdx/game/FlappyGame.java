@@ -34,7 +34,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 	MeshModel model3D;
 
-	private Texture tex;
+	//private Texture tex;
 	private Texture world;
 	private Texture menu;
 	private Texture sky;
@@ -68,13 +68,12 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader = new Shader();
 
 		//For Android
-		//tex = new Texture(Gdx.files.internal("textures/phobos2k.png"));
+		/*sky = new Texture(Gdx.files.internal("textures/testsky.png"));
+		world = new Texture(Gdx.files.internal("textures/testwall.png"));
+		menu = new Texture(Gdx.files.internal("textures/menu.png"));*/
 
 		//For Desktop App
-		tex = new Texture(Gdx.files.internal("core/assets/textures/spectex01.png"));
 		sky = new Texture(Gdx.files.internal("core/assets/textures/testsky.png"));
-		//tex = new Texture(Gdx.files.internal("core/assets/textures/phobos2k.png"));
-		//world = new Texture(Gdx.files.internal("core/assets/textures/spectex01.png"));
 		world = new Texture(Gdx.files.internal("core/assets/textures/testwall.png"));
 		menu = new Texture(Gdx.files.internal("core/assets/textures/menu.png"));
 
@@ -95,7 +94,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//orthoCam.orthographicProjection(-5, 5, -5, 5, 3.0f, 100);
 		//topCam.perspectiveProjection(30.0f, 1, 3, 100);
 
-		//TODO: try this way to create a texture image
+		//try this way to create a texture image
 		/*Pixmap pm = new Pixmap(128, 128, Format.RGBA8888);
 		for(int i = 0; i < pm.getWidth(); i++)
 		{
@@ -151,7 +150,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//updatePlane(0, 0, -3.0f * deltaTime);
 
 
-			if (plane.getMove().z > 100) {
+			if (plane.getMove().z > 90) {
 				plane.setMove(0, 0, -movingSpeed * deltaTime);
 			}
 			if (plane.getMove().z > 110) {
@@ -255,6 +254,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 				if(plane.wallCollision(cells[cell])){
 					this.gameOver = true;
+					create();
 				}
 			}
 		}
@@ -322,23 +322,25 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		//ModelMatrix.main.addRotationZ(angle);
 
-		float s = (float)Math.sin((angle / 2.0) * Math.PI / 180.0);
-		float c = (float)Math.cos((angle / 2.0) * Math.PI / 180.0);
+		//float s = (float)Math.sin((angle / 2.0) * Math.PI / 180.0);
+		//float c = (float)Math.cos((angle / 2.0) * Math.PI / 180.0);
 
-		shader.setLightPosition(0.0f + c * 3.0f, 5.0f, 0.0f + s * 3.0f, 1.0f);
-		//shader.setLightPosition(3.0f, 4.0f, 0.0f, 1.0f);
-		//shader.setLightPosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
+		//shader.setLightPosition(0.0f + c * 3.0f, 5.0f, 0.0f + s * 3.0f, 1.0f);
+		shader.setLightPosition(cam.eye.x,cam.eye.y-10,cam.eye.z,1);
+		//shader.setLightPosition(0, cam.eye.y, cam.eye.z, 1.0f);
 
 		//lights that follow plane
-		shader.setLightPositionPlane(cam.eye.x,5,cam.eye.z,1);
+		shader.setLightPositionPlane(cam.eye.x,cam.eye.y+10,cam.eye.z,1);
 
-		float s2 = Math.abs((float)Math.sin((angle / 1.312) * Math.PI / 180.0));
-		float c2 = Math.abs((float)Math.cos((angle / 1.312) * Math.PI / 180.0));
+		//float s2 = Math.abs((float)Math.sin((angle / 1.312) * Math.PI / 180.0));
+		//float c2 = Math.abs((float)Math.cos((angle / 1.312) * Math.PI / 180.0));
 
 		//shader.setSpotDirection(s2, -0.3f, c2, 0.0f);
 		shader.setSpotDirection(-cam.n.x, -cam.n.y, -cam.n.z, 0.0f);
+		//shader.setSpotDirection(0, 0, 0, 0.0f);
+
 		shader.setSpotExponent(0.0f);
-		shader.setConstantAttenuation(1.0f);
+		shader.setConstantAttenuation(1f);
 		shader.setLinearAttenuation(0.00f);
 		shader.setQuadraticAttenuation(0.00f);
 
@@ -347,12 +349,12 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
 
-		shader.setMaterialDiffuse(s, 0.4f, c, 1.0f);
-		//shader.setMaterialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
-		shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
+		//shader.setMaterialDiffuse(s, 0.4f, c, 1.0f);
+		shader.setMaterialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
+		shader.setMaterialSpecular(1f, 1f, 1f, 1.0f);
 		//shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
 		shader.setMaterialEmission(0, 0, 0, 1);
-		shader.setShininess(50.0f);
+		shader.setShininess(150.0f);
 
 		if(!gameOver){
 			ModelMatrix.main.pushMatrix();
@@ -390,10 +392,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		display();
 	}
 
-	public void setGameOver() {
-		this.gameOver = false;
-	}
-
 	private void makeMenu(){
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(0f, 5f, 0f);
@@ -409,6 +407,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		else{
 			gameScore = "stage"+score+".png";
 		}
+
+		//For Android App
+		//stageImage = new Texture(Gdx.files.internal("textures/"+gameScore));
+
+		//For Desktop App
 		stageImage = new Texture(Gdx.files.internal("core/assets/textures/"+gameScore));
 
 		ModelMatrix.main.pushMatrix();
@@ -421,10 +424,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 	private void drawCourse()
 	{
-		shader.setMaterialDiffuse(0.8f, 0.8f, 0.2f, 1.0f);
-		shader.setMaterialSpecular(1.0f, 1.0f, 1.0f, 1.0f);
-		shader.setShininess(150.0f);
-		shader.setMaterialEmission(0, 0, 0, 1);
 		ModelMatrix.main.addTranslation(0.0f, 0.0f, -15.0f);
 
 		for(int i = 0; i < stages; i++){
