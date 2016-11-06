@@ -53,9 +53,11 @@ public class Shader {
 		//vertexShaderString = Gdx.files.internal("shaders/fragmentLighting3D.vert").readString();
 		//fragmentShaderString =  Gdx.files.internal("shaders/fragmentLighting3D.frag").readString();
 
+
 		//For Desktop App
 		vertexShaderString = Gdx.files.internal("core/assets/shaders/fragmentLighting3D.vert").readString();
 		fragmentShaderString =  Gdx.files.internal("core/assets/shaders/fragmentLighting3D.frag").readString();
+
 
 		vertexShaderID = Gdx.gl.glCreateShader(GL20.GL_VERTEX_SHADER);
 		fragmentShaderID = Gdx.gl.glCreateShader(GL20.GL_FRAGMENT_SHADER);

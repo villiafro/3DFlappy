@@ -20,7 +20,7 @@ public class Plane {
 
     Point3D move;
 
-    Point initialDrag;
+    Point3D initialDrag;
 
     boolean movingUp;
     boolean movingDown;
@@ -38,7 +38,7 @@ public class Plane {
 
         move = new Point3D();
 
-        initialDrag = new Point();
+        initialDrag = new Point3D();
 
         movingUp = false;
         movingDown = false;
@@ -256,7 +256,7 @@ public class Plane {
         return false;
     }
 
-    public Point getInitialDrag() {
+    public Point3D getInitialDrag() {
         return initialDrag;
     }
 }
