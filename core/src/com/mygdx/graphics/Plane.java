@@ -136,25 +136,42 @@ public class Plane {
         boolean moved = false;
         float checkSide = this.move.x - delU*u.x + delV*v.x + delN*n.x;
         float checkUp = this.move.y - delU*u.y + delV*v.y + delN*n.y;
+
+        //hægri
         if(this.move.x > checkSide && checkSide > -3.5f){
             this.move.x = checkSide;
-            setRotationSide(5);
+
             moved = true;
-        }
+            if(getRotationUpDown() > 0){
+                setRotationSide(-5);
+            }
+            else{ // venjulegt fara til hægri
+                setRotationSide(5);
+            }
+        } // vinstri
         else if(this.move.x < checkSide && checkSide < 3.5f){
             this.move.x = checkSide;
-            setRotationSide(-5);
+
             moved = true;
+            if(getRotationUpDown() > 0){
+                setRotationSide(5);
+            }
+            else{
+                setRotationSide(-5);
+            }
         }
+        //niður
         if(this.move.y > checkUp && checkUp > -3){
             this.move.y = checkUp;
             setRotationUpDown(5);
             moved = true;
-        }
+
+        } // upp
         else if(this.move.y < checkUp && checkUp < 5){
             this.move.y = checkUp;
             setRotationUpDown(-5);
             moved = true;
+
         }
 
         this.move.z -= delU*u.z + delV*v.z + delN*n.z;
