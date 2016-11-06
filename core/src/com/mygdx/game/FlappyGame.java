@@ -55,7 +55,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	int score = 0;
 	boolean gameOver = true;
 
-	float movingSpeed = 3.0f;
+	float movingSpeed = 1.0f;
 
 	boolean begining = true;
 
