@@ -117,14 +117,14 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		dragging = false;
 
+		//stages = 10;
 		stages = 10;
 
 		rand = new Random();
 
 		Cave cave = new Cave();
 		cells = cave.getCells();
-
-
+		
 		for(int i = 2; i < stages; i++){
 			int randNR = rand.nextInt(4);
 			if(randNR == 0){
@@ -140,6 +140,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 				cells[i].setCell(false,false,false,true);
 			}
 		}
+		cells[stages-1].setCell(true,true,true,true);
 
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	}
@@ -159,10 +160,10 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			//updatePlane(0, 0, -3.0f * deltaTime);
 
 
-			if (plane.getMove().z > 90) {
+			if (plane.getMove().z > ((stages-2) * 10)) {
 				plane.setMove(0, 0, -movingSpeed * deltaTime);
 			}
-			if (plane.getMove().z > 110) {
+			if (plane.getMove().z > ((stages*10)-5)) {
 				score += 1;
 				movingSpeed += 1;
 
@@ -522,6 +523,24 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			}
 
 		}
+
+		drawEndBackground();
+	}
+
+	public void drawEndBackground(){
+		ModelMatrix.main.pushMatrix();
+		ModelMatrix.main.addTranslation(0f, 5f, 20f);
+		for(float i = -15; i < 16f; i = i + 5f){
+			for(float j = -15f; j < 16f; j = j + 5f ){
+				ModelMatrix.main.pushMatrix();
+				ModelMatrix.main.addTranslation(i, j, 0f);
+				ModelMatrix.main.addScale(10f, 10f, 1f);
+				shader.setModelMatrix(ModelMatrix.main.getMatrix());
+				BoxGraphic.drawSolidCube(shader, sky);
+				ModelMatrix.main.popMatrix();
+			}
+		}
+		ModelMatrix.main.popMatrix();
 	}
 
 	@Override
