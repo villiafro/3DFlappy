@@ -38,6 +38,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	private Texture world;
 	private Texture menu;
 	private Texture sky;
+	private Texture over;
 
 	private Texture stageImage;
 
@@ -55,6 +56,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	boolean gameOver = true;
 
 	float movingSpeed = 3.0f;
+
+	boolean begining = true;
 
 	@Override
 	public void create () {
@@ -76,6 +79,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		sky = new Texture(Gdx.files.internal("core/assets/textures/testsky.png"));
 		world = new Texture(Gdx.files.internal("core/assets/textures/testwall.png"));
 		menu = new Texture(Gdx.files.internal("core/assets/textures/menu.png"));
+		over = new Texture(Gdx.files.internal("core/assets/textures/planeOver.png"));
 
 		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/plane.g3dj", true);
 
@@ -113,7 +117,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		Cave cave = new Cave();
 		cells = cave.getCells();
-
 
 
 		for(int i = 2; i < stages; i++){
@@ -267,6 +270,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || dragging) {
 			score = 0;
 			gameOver = false;
+			begining = false;
 		}
 
 		/*else{
@@ -326,11 +330,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//float c = (float)Math.cos((angle / 2.0) * Math.PI / 180.0);
 
 		//shader.setLightPosition(0.0f + c * 3.0f, 5.0f, 0.0f + s * 3.0f, 1.0f);
-		shader.setLightPosition(cam.eye.x,cam.eye.y-10,cam.eye.z,1);
+		shader.setLightPosition(cam.eye.x,cam.eye.y-2,cam.eye.z+1,1);
 		//shader.setLightPosition(0, cam.eye.y, cam.eye.z, 1.0f);
 
 		//lights that follow plane
-		shader.setLightPositionPlane(cam.eye.x,cam.eye.y+10,cam.eye.z,1);
+		shader.setLightPositionPlane(cam.eye.x,cam.eye.y+2,cam.eye.z+1,1);
 
 		//float s2 = Math.abs((float)Math.sin((angle / 1.312) * Math.PI / 180.0));
 		//float c2 = Math.abs((float)Math.cos((angle / 1.312) * Math.PI / 180.0));
@@ -393,11 +397,17 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	}
 
 	private void makeMenu(){
+
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(0f, 5f, 0f);
 		ModelMatrix.main.addScale(15f, 15f, 1f);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		BoxGraphic.drawSolidCube(shader, menu);
+		if(begining){
+			BoxGraphic.drawSolidCube(shader, menu);
+		}
+		else{
+			BoxGraphic.drawSolidCube(shader, over);
+		}
 		ModelMatrix.main.popMatrix();
 
 		String gameScore;
