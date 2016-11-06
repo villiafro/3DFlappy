@@ -118,6 +118,19 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
+	private void reCreate()
+	{
+		Gdx.input.setInputProcessor(this);
+		plane = new Plane();
+
+		ModelMatrix.main = new ModelMatrix();
+		ModelMatrix.main.loadIdentityMatrix();
+		shader.setModelMatrix(ModelMatrix.main.getMatrix());
+
+		cam = new Camera();
+		cam.look(new Point3D(0f, 4f, -4f), new Point3D(0,4,0), new Vector3D(0,1,0));
+	}
+
 	private void input()
 	{
 	}
@@ -139,7 +152,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 				movingSpeed += 1;
 
 				System.out.println("Score: " + score);
-				create();
+				reCreate();
 			}
 
 			if (Gdx.input.isKeyPressed(Input.Keys.A) || plane.isMovingLeft()) {
@@ -177,7 +190,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 				if(plane.wallCollision(cells[cell])){
 					this.gameOver = true;
-					create();
+					reCreate();
+
 				}
 			}
 		}
@@ -277,9 +291,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		}
 		else if(completed == score){
 			BoxGraphic.drawSolidCube(shader, comp);
+			movingSpeed = 3.0f;
 		}
 		else{
 			BoxGraphic.drawSolidCube(shader, over);
+			movingSpeed = 3.0f;
 		}
 		ModelMatrix.main.popMatrix();
 
