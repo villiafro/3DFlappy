@@ -39,6 +39,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	private Texture menu;
 	private Texture sky;
 	private Texture over;
+	private Texture comp;
 
 	private Texture stageImage;
 
@@ -55,9 +56,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	int score = 0;
 	boolean gameOver = true;
 
-	float movingSpeed = 1.0f;
+	float movingSpeed = 3.0f;
 
 	boolean begining = true;
+
+	int completed = 1;
 
 	@Override
 	public void create () {
@@ -73,13 +76,16 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//For Android
 		/*sky = new Texture(Gdx.files.internal("textures/testsky.png"));
 		world = new Texture(Gdx.files.internal("textures/testwall.png"));
-		menu = new Texture(Gdx.files.internal("textures/menu.png"));*/
+		menu = new Texture(Gdx.files.internal("textures/menu.png"));
+		over = new Texture(Gdx.files.internal("textures/planeOver.png"));
+		comp = new Texture(Gdx.files.internal("textures/victory.png"));*/
 
 		//For Desktop App
 		sky = new Texture(Gdx.files.internal("core/assets/textures/testsky.png"));
 		world = new Texture(Gdx.files.internal("core/assets/textures/testwall.png"));
 		menu = new Texture(Gdx.files.internal("core/assets/textures/menu.png"));
 		over = new Texture(Gdx.files.internal("core/assets/textures/planeOver.png"));
+		comp = new Texture(Gdx.files.internal("core/assets/textures/victory.png"));
 
 		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/plane.g3dj", true);
 
@@ -360,7 +366,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setMaterialEmission(0, 0, 0, 1);
 		shader.setShininess(150.0f);
 
-		if(!gameOver){
+		if(!gameOver && (completed != score)){
 			ModelMatrix.main.pushMatrix();
 			ModelMatrix.main.addTranslation(0.0f, 4.0f, 0.0f);
 			//ModelMatrix.main.addRotation(angle, new Vector3D(1,1,1));
@@ -404,6 +410,9 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
 		if(begining){
 			BoxGraphic.drawSolidCube(shader, menu);
+		}
+		else if(completed == score){
+			BoxGraphic.drawSolidCube(shader, comp);
 		}
 		else{
 			BoxGraphic.drawSolidCube(shader, over);
