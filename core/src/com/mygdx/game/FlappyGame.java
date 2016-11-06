@@ -96,8 +96,14 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		rand = new Random();
 
 		Cave cave = new Cave();
+		fillRandomCell(cave);
+
+		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	}
+
+	private void fillRandomCell(Cave cave){
 		cells = cave.getCells();
-		
+
 		for(int i = 2; i < stages; i++){
 			int randNR = rand.nextInt(4);
 			if(randNR == 0){
@@ -114,8 +120,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			}
 		}
 		cells[stages-1].setCell(true,true,true,true);
-
-		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
 	private void reCreate()
@@ -129,6 +133,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		cam = new Camera();
 		cam.look(new Point3D(0f, 4f, -4f), new Point3D(0,4,0), new Vector3D(0,1,0));
+
+		rand = new Random();
+
+		Cave cave = new Cave();
+		fillRandomCell(cave);
 	}
 
 	private void input()
