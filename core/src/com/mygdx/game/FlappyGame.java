@@ -60,7 +60,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 	boolean begining = true;
 
-	int completed = 1;
+	int completed = 5;
 
 	@Override
 	public void create () {
@@ -117,8 +117,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		dragging = false;
 
-		//stages = 10;
 		stages = 10;
+		//stages = 4;
 
 		rand = new Random();
 
@@ -153,7 +153,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	{
 		float deltaTime = Gdx.graphics.getDeltaTime();
 
-		if(!gameOver) {
+		if(!gameOver && (completed != score)) {
 			angle += 180.0f * deltaTime;
 			cam.slide(0, 0, -movingSpeed * deltaTime);
 			plane.setMove(0, 0, -movingSpeed * deltaTime);
@@ -409,7 +409,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		ModelMatrix.main.addTranslation(0f, 5f, 0f);
 		ModelMatrix.main.addScale(15f, 15f, 1f);
 		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		if(begining){
+		if(begining && (completed != score)){
 			BoxGraphic.drawSolidCube(shader, menu);
 		}
 		else if(completed == score){
@@ -434,12 +434,15 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		//For Desktop App
 		stageImage = new Texture(Gdx.files.internal("core/assets/textures/"+gameScore));
 
-		ModelMatrix.main.pushMatrix();
-		ModelMatrix.main.addTranslation(-4f, 4.5f, -0.1f);
-		ModelMatrix.main.addScale(1f, 2f, 1f);
-		shader.setModelMatrix(ModelMatrix.main.getMatrix());
-		BoxGraphic.drawSolidCube(shader, stageImage);
-		ModelMatrix.main.popMatrix();
+		if(completed != score){
+			ModelMatrix.main.pushMatrix();
+			ModelMatrix.main.addTranslation(-4f, 4.5f, -0.1f);
+			ModelMatrix.main.addScale(1f, 2f, 1f);
+			shader.setModelMatrix(ModelMatrix.main.getMatrix());
+			BoxGraphic.drawSolidCube(shader, stageImage);
+			ModelMatrix.main.popMatrix();
+		}
+
 	}
 
 	private void drawCourse()
