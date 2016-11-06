@@ -191,27 +191,12 @@ public class Plane {
 
     public boolean wallCollision(Cell cell){
 
-        /*if(cell.isUpperLeft() || cell.isUpperRight() || cell.isDownerLeft() || cell.isDownerRight()){
-            System.out.println("cell has wall");
-        }*/
         boolean possibleCollision = false;
         float relativeZ = this.move.z%10;
         if((relativeZ > 3.5f && relativeZ < 6.5f)){ // relative to middle point of plane...
             possibleCollision = true;
-        }/*
-        if(cell.isUpperLeft()){
-            System.out.println(" gap is to top right");
         }
-        if(cell.isDownerLeft()){
-            System.out.println(" gap is to down right");
-        }
-        if(cell.isUpperRight()){
-            System.out.println(" gap is to top left");
-        }
-        if(cell.isDownerRight()){
-            System.out.println(" gap is to down left");
-        }*/
-       // float planePosLeft = (this.move.x - 0.7f);
+
         if(possibleCollision){
 
             if( !cell.isUpperLeft() && (this.move.x - 0.7) < 0.01f && (this.move.y + 0.5) > 1.01f){
@@ -232,26 +217,6 @@ public class Plane {
                 return true;
             }
         }
-
-       /* if( !cell.isUpperRight() && (this.move.x - 0.7) < 0.01f && (this.move.y + 0.05) > 0.01f){
-            System.out.println("colliding top right side");
-        }
-        if( !cell.isUpperLeft() && (this.move.x + 0.7)> 0.01f && (this.move.y - 0.05) > 0.01f){
-            System.out.println("colliding top left side");
-        }
-        if( !cell.isDownerRight() && (this.move.x - 0.7) < 0.01f && (this.move.y + 0.05) < 0.01f){
-            System.out.println("colliding bottom right side");
-        }
-        if( !cell.isDownerLeft() && (this.move.x + 0.7) > 0.01f && (this.move.y - 0.05) < 0.01f){
-            System.out.println("colliding bottom left side");
-        }
-
-*/
-       /* System.out.println(" relative z = " + relativeZ);
-*/
-       // System.out.println("this x = " + this.move.x + " this z = " + this.move.z + " this y = " + this.move.y);
-
-
 
         return false;
     }

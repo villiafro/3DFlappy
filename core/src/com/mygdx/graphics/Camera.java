@@ -52,11 +52,6 @@ public class Camera {
 
 	}
 
-	public void setEye(float x, float y, float z)
-	{
-		eye.set(x, y, z);
-	}
-
 	public void slide(float delU, float delV, float delN)
 	{
 		eye.x += delU*u.x + delV*v.x + delN*n.x;
@@ -64,70 +59,6 @@ public class Camera {
 		eye.z += delU*u.z + delV*v.z + delN*n.z;
 	}
 
-	public void roll(float angle)
-	{
-		float radians = angle * (float)Math.PI / 180.0f;
-		float c = (float)Math.cos(radians);
-		float s = (float)Math.sin(radians);
-		Vector3D t = new Vector3D(u.x, u.y, u.z);
-
-		u.set(t.x * c - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
-		v.set(t.x * s + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
-		
-	}
-
-	public void yaw(float angle)
-	{
-		float radians = angle * (float)Math.PI / 180.0f;
-		float c = (float)Math.cos(radians);
-		float s = -(float)Math.sin(radians);
-		Vector3D t = new Vector3D(u.x, u.y, u.z);
-
-		u.set(t.x * c - n.x * s, t.y * c - n.y * s, t.z * c - n.z * s);
-		n.set(t.x * s + n.x * c, t.y * s + n.y * c, t.z * s + n.z * c);
-		
-	}
-
-	public void pitch(float angle)
-	{
-		float radians = angle * (float)Math.PI / 180.0f;
-		float c = (float)Math.cos(radians);
-		float s = (float)Math.sin(radians);
-		Vector3D t = new Vector3D(n.x, n.y, n.z);
-
-		n.set(t.x * c - v.x * s, t.y * c - v.y * s, t.z * c - v.z * s);
-		v.set(t.x * s + v.x * c, t.y * s + v.y * c, t.z * s + v.z * c);
-		
-	}
-
-	public void walkForward(float del)
-	{
-		eye.x -= del*n.x;
-		//eye.y += del*n.y;
-		eye.z -= del*n.z;
-	}
-
-	public void rotateY(float angle)
-	{
-		float radians = angle * (float)Math.PI / 180.0f;
-		float c = (float)Math.cos(radians);
-		float s = -(float)Math.sin(radians);
-
-		u.set(c * u.x - s * u.z, u.y, s * u.x + c * u.z);
-		v.set(c * v.x - s * v.z, v.y, s * v.x + c * v.z);
-		n.set(c * n.x - s * n.z, n.y, s * n.x + c * n.z);
-		
-	}
-
-	public void orthographicProjection(float left, float right, float bottom, float top, float near, float far) {
-		this.left = left;
-		this.right = right;
-		this.bottom = bottom;
-		this.top = top;
-		this.near = near;
-		this.far = far;
-		orthographic = true;
-	}
 
 	public void perspectiveProjection(float fov, float ratio, float near, float far) {
 		this.top = near * (float)Math.tan(((double)fov / 2.0) * Math.PI / 180.0);  //N*tan(fov/2)

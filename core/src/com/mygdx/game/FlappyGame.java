@@ -1,25 +1,16 @@
 package com.mygdx.game;
 
-
-import java.util.ArrayList;
 import java.util.Random;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.mygdx.graphics.shapes.*;
 import com.mygdx.graphics.shapes.g3djmodel.G3DJModelLoader;
 import com.mygdx.graphics.shapes.g3djmodel.MeshModel;
-
 import com.mygdx.graphics.*;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 
 public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
@@ -68,9 +59,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		Gdx.input.setInputProcessor(this);
 
-		//DisplayMode disp = Gdx.graphics.getDesktopDisplayMode();
-		//Gdx.graphics.setDisplayMode(disp.width, disp.height, true);
-
 		shader = new Shader();
 
 		//For Android
@@ -99,21 +87,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		cam = new Camera();
 		cam.look(new Point3D(0f, 4f, -4f), new Point3D(0,4,0), new Vector3D(0,1,0));
-
-		//topCam = new Camera();
-		//orthoCam.orthographicProjection(-5, 5, -5, 5, 3.0f, 100);
-		//topCam.perspectiveProjection(30.0f, 1, 3, 100);
-
-		//try this way to create a texture image
-		/*Pixmap pm = new Pixmap(128, 128, Format.RGBA8888);
-		for(int i = 0; i < pm.getWidth(); i++)
-		{
-			for(int j = 0; j < pm.getWidth(); j++)
-			{
-				pm.drawPixel(i, j, rand.nextInt());
-			}
-		}
-		tex = new Texture(pm);*/
 
 		dragging = false;
 
@@ -157,8 +130,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			angle += 180.0f * deltaTime;
 			cam.slide(0, 0, -movingSpeed * deltaTime);
 			plane.setMove(0, 0, -movingSpeed * deltaTime);
-			//updatePlane(0, 0, -3.0f * deltaTime);
-
 
 			if (plane.getMove().z > ((stages-2) * 10)) {
 				plane.setMove(0, 0, -movingSpeed * deltaTime);
@@ -172,91 +143,33 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			}
 
 			if (Gdx.input.isKeyPressed(Input.Keys.A) || plane.isMovingLeft()) {
-				//cam.slide(-3.0f * deltaTime, 0, 0);
 				if (plane.setMove(-movingSpeed * deltaTime, 0, 0)) {
 					cam.slide(-movingSpeed * deltaTime, 0, 0);
 				}
-				//plane.setRotationSide(-5);
-				//updatePlane(-3.0f * deltaTime, 0, 0);
 			}
 			if (Gdx.input.isKeyPressed(Input.Keys.D) || plane.isMovingRight()) {
-				//cam.slide(3.0f * deltaTime, 0, 0);
 				if (plane.setMove(movingSpeed * deltaTime, 0, 0)) {
 					cam.slide(movingSpeed * deltaTime, 0, 0);
 				}
-				//plane.setRotationSide(5);
-				//updatePlane(3.0f * deltaTime, 0, 0);
 			}
 			if (!Gdx.input.isKeyPressed(Input.Keys.D) && !Gdx.input.isKeyPressed(Input.Keys.A)) {
 				plane.resetRotationSide();
 			}
 
 			if (Gdx.input.isKeyPressed(Input.Keys.W) || plane.isMovingUp()) {
-				//cam.slide(0, 0, -3.0f * deltaTime);
-				//updatePlane(0, 0, -3.0f * deltaTime);
-				//cam.slide(0, 3.0f * deltaTime, 0);
 				if (plane.setMove(0, movingSpeed * deltaTime, 0)) {
 					cam.slide(0, movingSpeed * deltaTime, 0);
 				}
-				//plane.setRotationUpDown(-5);
-				//updatePlane(0, -3.0f * deltaTime, 0);
 			}
 
 			if (Gdx.input.isKeyPressed(Input.Keys.S) || plane.isMovingDown()) {
-				//cam.slide(0, 0, 3.0f * deltaTime);
-				//updatePlane(0, 0, 3.0f * deltaTime);
-				//cam.slide(0, -3.0f * deltaTime, 0);
 				if (plane.setMove(0, -movingSpeed * deltaTime, 0)) {
 					cam.slide(0, -movingSpeed * deltaTime, 0);
 				}
-				//plane.setRotationUpDown(5);
-				//updatePlane(0, 3.0f * deltaTime, 0);
 			}
 			if (!Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.W)) {
 				plane.resetRotationUpDown();
 			}
-
-			/*if (Gdx.input.isKeyPressed(Input.Keys.R)) {
-				if(plane.setMove(0, -3.0f * deltaTime, 0)){
-					cam.slide(0, -3.0f * deltaTime, 0);
-				}
-				//updatePlane(0, -3.0f * deltaTime, 0);
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.F)) {
-				if(plane.setMove(0, 3.0f * deltaTime, 0)){
-					cam.slide(0, 3.0f * deltaTime, 0);
-				}
-				//updatePlane(0, 3.0f * deltaTime, 0);
-			}
-
-			if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-				cam.yaw(-90.0f * deltaTime);
-				//cam.rotateY(90.0f * deltaTime);
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-				cam.yaw(90.0f * deltaTime);
-				//cam.rotateY(-90.0f * deltaTime);
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-				cam.pitch(90.0f * deltaTime);
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-				cam.pitch(-90.0f * deltaTime);
-			}
-
-			if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
-				cam.roll(-90.0f * deltaTime);
-			}
-			if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-				cam.roll(90.0f * deltaTime);
-			}*/
-
-			/*if(Gdx.input.isKeyPressed(Input.Keys.T)) {
-				fov -= 30.0f * deltaTime;
-			}
-			if(Gdx.input.isKeyPressed(Input.Keys.G)) {
-				fov += 30.0f * deltaTime;
-			}*/
 
 			int cell = (int)(plane.getMove().z/10) + 1;
 			//System.out.println("cell is: " + cell);
@@ -269,7 +182,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			}
 		}
 		if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-			//Gdx.graphics.setDisplayMode(500, 500, false);
 			Gdx.app.exit();
 		}
 
@@ -280,13 +192,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			begining = false;
 		}
 
-		/*else{
-			Cell bla = new Cell();
-			bla.setCell(false,false,false,false);
-			plane.wallCollision(bla);
-		}*/
-		//HAX
-
 		//do all updates to the game
 	}
 
@@ -296,15 +201,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
-		//Gdx.gl.glDisable(GL20.GL_DEPTH_TEST);
-
-		/*
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		//Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		//Gdx.gl.glBlendFunc(GL20.GL_ONE, GL20.GL_ONE);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE);
-		*/
-
 
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		cam.perspectiveProjection(fov, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 0.2f, 100.0f);
@@ -312,65 +208,32 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		shader.setProjectionMatrix(cam.getProjectionMatrix());
 		shader.setEyePosition(cam.eye.x, cam.eye.y, cam.eye.z, 1.0f);
 
-		/*else
-		{
-			Gdx.gl.glViewport(Gdx.graphics.getWidth() / 2, 0, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight());
-			topCam.look(new Point3D(cam.eye.x, 20.0f, cam.eye.z), cam.eye, new Vector3D(0,0,-1));
-			//orthoCam.look(new Point3D(7.0f, 40.0f, -7.0f), new Point3D(7.0f, 0.0f, -7.0f), new Vector3D(0,0,-1));
-			topCam.perspectiveProjection(30.0f, (float)Gdx.graphics.getWidth() / (float)(2*Gdx.graphics.getHeight()), 3, 100);
-			shader.setViewMatrix(topCam.getViewMatrix());
-			shader.setProjectionMatrix(topCam.getProjectionMatrix());
-			shader.setEyePosition(topCam.eye.x, topCam.eye.y, topCam.eye.z, 1.0f);
-		}*/
-
-
-		//BoxGraphic.drawOutlineCube();
-		//SphereGraphic.drawSolidSphere();
-		//SphereGraphic.drawOutlineSphere();
-
-
 		ModelMatrix.main.loadIdentityMatrix();
 
-		//ModelMatrix.main.addRotationZ(angle);
-
-		//float s = (float)Math.sin((angle / 2.0) * Math.PI / 180.0);
-		//float c = (float)Math.cos((angle / 2.0) * Math.PI / 180.0);
-
-		//shader.setLightPosition(0.0f + c * 3.0f, 5.0f, 0.0f + s * 3.0f, 1.0f);
 		shader.setLightPosition(cam.eye.x,cam.eye.y-2,cam.eye.z+1,1);
-		//shader.setLightPosition(0, cam.eye.y, cam.eye.z, 1.0f);
 
 		//lights that follow plane
 		shader.setLightPositionPlane(cam.eye.x,cam.eye.y+2,cam.eye.z+1,1);
 
-		//float s2 = Math.abs((float)Math.sin((angle / 1.312) * Math.PI / 180.0));
-		//float c2 = Math.abs((float)Math.cos((angle / 1.312) * Math.PI / 180.0));
-
-		//shader.setSpotDirection(s2, -0.3f, c2, 0.0f);
 		shader.setSpotDirection(-cam.n.x, -cam.n.y, -cam.n.z, 0.0f);
-		//shader.setSpotDirection(0, 0, 0, 0.0f);
 
 		shader.setSpotExponent(0.0f);
 		shader.setConstantAttenuation(1f);
 		shader.setLinearAttenuation(0.00f);
 		shader.setQuadraticAttenuation(0.00f);
 
-		//shader.setLightColor(s2, 0.4f, c2, 1.0f);
 		shader.setLightColor(1.0f, 1.0f, 1.0f, 1.0f);
 
 		shader.setGlobalAmbient(0.3f, 0.3f, 0.3f, 1);
 
-		//shader.setMaterialDiffuse(s, 0.4f, c, 1.0f);
 		shader.setMaterialDiffuse(1.0f, 1.0f, 1.0f, 1.0f);
 		shader.setMaterialSpecular(1f, 1f, 1f, 1.0f);
-		//shader.setMaterialSpecular(0.0f, 0.0f, 0.0f, 1.0f);
 		shader.setMaterialEmission(0, 0, 0, 1);
 		shader.setShininess(150.0f);
 
 		if(!gameOver && (completed != score)){
 			ModelMatrix.main.pushMatrix();
 			ModelMatrix.main.addTranslation(0.0f, 4.0f, 0.0f);
-			//ModelMatrix.main.addRotation(angle, new Vector3D(1,1,1));
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
 
 			ModelMatrix.main.pushMatrix();
