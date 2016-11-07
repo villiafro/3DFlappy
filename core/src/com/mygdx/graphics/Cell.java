@@ -15,6 +15,14 @@ public class Cell {
         downerRight = true;
         downerLeft = true;
     }
+
+    /**
+     * ets each cell if it is allowed to draw a wall in the right place
+     * @param upR the upper right wall
+     * @param upL the upper left wall
+     * @param doR the downer right wall
+     * @param doL the downer left wall
+     */
     public void setCell(boolean upR, boolean upL, boolean doR, boolean doL){
         upperRight = upR;
         upperLeft = upL;
@@ -28,11 +36,9 @@ public class Cell {
     public boolean isUpperLeft(){
         return upperLeft;
     }
-
     public boolean isDownerRight(){
         return downerRight;
     }
-
     public boolean isDownerLeft(){
         return  downerLeft;
     }

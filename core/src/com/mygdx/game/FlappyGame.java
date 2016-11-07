@@ -19,13 +19,11 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	private float angle;
 
 	private Camera cam;
-	//private Camera topCam;
 
 	private float fov = 120.0f;
 
-	MeshModel model3D;
+	private MeshModel model3D;
 
-	//private Texture tex;
 	private Texture world;
 	private Texture menu;
 	private Texture sky;
@@ -38,24 +36,23 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 	private static Cell[] cells;
 
-	int stages;
+	private int stages;
 
-	Plane plane;
+	private Plane plane;
 
-	boolean dragging;
+	private boolean dragging;
 
-	int score = 0;
-	boolean gameOver = true;
+	private int score = 0;
+	private boolean gameOver = true;
 
-	float movingSpeed = 3.0f;
+	private float movingSpeed = 3.0f;
 
-	boolean begining = true;
+	private boolean begining = true;
 
-	int completed = 5;
+	private int completed = 5;
 
 	@Override
 	public void create () {
-
 
 		Gdx.input.setInputProcessor(this);
 
@@ -91,7 +88,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		dragging = false;
 
 		stages = 10;
-		//stages = 4;
 
 		rand = new Random();
 
@@ -101,6 +97,10 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	}
 
+	/**
+	 * fill the cave with randomized blocks
+	 * @param cave cave to be filled
+	 */
 	private void fillRandomCell(Cave cave){
 		cells = cave.getCells();
 
@@ -122,6 +122,10 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		cells[stages-1].setCell(true,true,true,true);
 	}
 
+	/**
+	 * reset the model matrix and camera
+	 * and generate a new randomized cave
+	 */
 	private void reCreate()
 	{
 		Gdx.input.setInputProcessor(this);
@@ -140,10 +144,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		fillRandomCell(cave);
 	}
 
-	private void input()
-	{
-	}
-
 	private void update()
 	{
 		float deltaTime = Gdx.graphics.getDeltaTime();
@@ -153,9 +153,12 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			cam.slide(0, 0, -movingSpeed * deltaTime);
 			plane.setMove(0, 0, -movingSpeed * deltaTime);
 
+			// when on at the end of the cave move plane further away
 			if (plane.getMove().z > ((stages-2) * 10)) {
 				plane.setMove(0, 0, -movingSpeed * deltaTime);
 			}
+
+			// when plane is far enough recreate the cave
 			if (plane.getMove().z > ((stages*10)-5)) {
 				score += 1;
 				movingSpeed += 1;
@@ -174,6 +177,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 					cam.slide(movingSpeed * deltaTime, 0, 0);
 				}
 			}
+
+			// reset the rotation if D and A keys are released
 			if (!Gdx.input.isKeyPressed(Input.Keys.D) && !Gdx.input.isKeyPressed(Input.Keys.A)) {
 				plane.resetRotationSide();
 			}
@@ -189,14 +194,16 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 					cam.slide(0, -movingSpeed * deltaTime, 0);
 				}
 			}
+
+			//reset the rotation if S and W keys are released
 			if (!Gdx.input.isKeyPressed(Input.Keys.S) && !Gdx.input.isKeyPressed(Input.Keys.W)) {
 				plane.resetRotationUpDown();
 			}
 
 			int cell = (int)(plane.getMove().z/10) + 1;
-			//System.out.println("cell is: " + cell);
-			if(cell < stages ){
 
+			// check collision if cell is in stage
+			if(cell < stages ){
 				if(plane.wallCollision(cells[cell])){
 					this.gameOver = true;
 					reCreate();
@@ -208,19 +215,16 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			Gdx.app.exit();
 		}
 
-
+		// detect if a player wants to start again
 		if (Gdx.input.isKeyPressed(Input.Keys.ENTER) || dragging) {
 			score = 0;
 			gameOver = false;
 			begining = false;
 		}
-
-		//do all updates to the game
 	}
 
 	private void display()
 	{
-		//do all actual drawing and rendering here
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
 		Gdx.gl.glEnable(GL20.GL_DEPTH_TEST);
@@ -283,12 +287,13 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 	@Override
 	public void render () {
 
-		input();
-		//put the code inside the update and display methods, depending on the nature of the code
 		update();
 		display();
 	}
 
+	/**
+	 * Make a menu window if the game is starting or ending
+	 */
 	private void makeMenu(){
 
 		ModelMatrix.main.pushMatrix();
@@ -343,7 +348,6 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 			//bottom
 			ModelMatrix.main.pushMatrix();
-
 
 			ModelMatrix.main.addScale(10f, 1f, 10f);
 			shader.setModelMatrix(ModelMatrix.main.getMatrix());
@@ -418,6 +422,9 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		drawEndBackground();
 	}
 
+	/**
+	 * draw a endless space at the end of each stage
+	 */
 	public void drawEndBackground(){
 		ModelMatrix.main.pushMatrix();
 		ModelMatrix.main.addTranslation(0f, 5f, 20f);
@@ -433,6 +440,8 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		}
 		ModelMatrix.main.popMatrix();
 	}
+
+	//controls for the android version
 
 	@Override
 	public boolean keyDown(int keycode) {
