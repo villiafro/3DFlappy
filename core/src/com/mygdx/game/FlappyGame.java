@@ -1,10 +1,8 @@
 package com.mygdx.game;
 
 import java.util.Random;
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
+
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.graphics.shapes.*;
@@ -58,19 +56,20 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 
 		shader = new Shader();
 
-		//For Android
-		/*sky = new Texture(Gdx.files.internal("textures/testsky.png"));
-		world = new Texture(Gdx.files.internal("textures/testwall.png"));
-		menu = new Texture(Gdx.files.internal("textures/menu.png"));
-		over = new Texture(Gdx.files.internal("textures/planeOver.png"));
-		comp = new Texture(Gdx.files.internal("textures/victory.png"));*/
-
-		//For Desktop App
-		sky = new Texture(Gdx.files.internal("core/assets/textures/testsky.png"));
-		world = new Texture(Gdx.files.internal("core/assets/textures/testwall.png"));
-		menu = new Texture(Gdx.files.internal("core/assets/textures/menu.png"));
-		over = new Texture(Gdx.files.internal("core/assets/textures/planeOver.png"));
-		comp = new Texture(Gdx.files.internal("core/assets/textures/victory.png"));
+		if(Gdx.app.getType() == Application.ApplicationType.Android){
+			sky = new Texture(Gdx.files.internal("textures/testsky.png"));
+			world = new Texture(Gdx.files.internal("textures/testwall.png"));
+			menu = new Texture(Gdx.files.internal("textures/menu.png"));
+			over = new Texture(Gdx.files.internal("textures/planeOver.png"));
+			comp = new Texture(Gdx.files.internal("textures/victory.png"));
+		}
+		else{
+			sky = new Texture(Gdx.files.internal("core/assets/textures/testsky.png"));
+			world = new Texture(Gdx.files.internal("core/assets/textures/testwall.png"));
+			menu = new Texture(Gdx.files.internal("core/assets/textures/menu.png"));
+			over = new Texture(Gdx.files.internal("core/assets/textures/planeOver.png"));
+			comp = new Texture(Gdx.files.internal("core/assets/textures/victory.png"));
+		}
 
 		model3D = G3DJModelLoader.loadG3DJFromFile("/plane/plane.g3dj", true);
 
@@ -206,6 +205,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			if(cell < stages ){
 				if(plane.wallCollision(cells[cell])){
 					this.gameOver = true;
+					dragging = false;
 					reCreate();
 
 				}
@@ -321,11 +321,14 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 			gameScore = "stage"+score+".png";
 		}
 
-		//For Android App
-		//stageImage = new Texture(Gdx.files.internal("textures/"+gameScore));
+		if(Gdx.app.getType() == Application.ApplicationType.Android){
+			stageImage = new Texture(Gdx.files.internal("textures/"+gameScore));
 
-		//For Desktop App
-		stageImage = new Texture(Gdx.files.internal("core/assets/textures/"+gameScore));
+		}
+		else{
+			stageImage = new Texture(Gdx.files.internal("core/assets/textures/"+gameScore));
+
+		}
 
 		if(completed != score){
 			ModelMatrix.main.pushMatrix();
@@ -489,7 +492,7 @@ public class FlappyGame extends ApplicationAdapter implements InputProcessor {
 		else if(plane.getInitialDrag().x > screenX+50){
 			plane.setMovingLeft();
 		}
-
+		System.out.println("screenX: " + screenX + " screenY: " + screenY);
 		return true;
 	}
 

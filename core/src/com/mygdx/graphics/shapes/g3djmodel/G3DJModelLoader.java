@@ -1,5 +1,6 @@
 package com.mygdx.graphics.shapes.g3djmodel;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.cedarsoftware.util.io.JsonObject;
@@ -12,11 +13,16 @@ public class G3DJModelLoader {
 	{
 		MeshModel model = new MeshModel();
 
-		//For Android
-		//JsonObject graph = (JsonObject)JsonReader.jsonToMaps(Gdx.files.internal("models/" + fileName).readString());
+		JsonObject graph;
 
-		//For Desktop App
-		JsonObject graph = (JsonObject)JsonReader.jsonToMaps(Gdx.files.internal("core/assets/models/" + fileName).readString());
+		if(Gdx.app.getType() == Application.ApplicationType.Android){
+			graph = (JsonObject)JsonReader.jsonToMaps(Gdx.files.internal("models/" + fileName).readString());
+
+		}
+		else{
+			graph = (JsonObject)JsonReader.jsonToMaps(Gdx.files.internal("core/assets/models/" + fileName).readString());
+
+		}
 
 		//System.out.println(graph);
 		short[] version = getShortArray(graph, "version");

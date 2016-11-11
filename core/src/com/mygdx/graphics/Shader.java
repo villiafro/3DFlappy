@@ -2,6 +2,7 @@ package com.mygdx.graphics;
 
 import java.nio.FloatBuffer;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -49,15 +50,14 @@ public class Shader {
 		String vertexShaderString;
 		String fragmentShaderString;
 
-		//For Android
-		//vertexShaderString = Gdx.files.internal("shaders/fragmentLighting3D.vert").readString();
-		//fragmentShaderString =  Gdx.files.internal("shaders/fragmentLighting3D.frag").readString();
-
-
-		//For Desktop App
-		vertexShaderString = Gdx.files.internal("core/assets/shaders/fragmentLighting3D.vert").readString();
-		fragmentShaderString =  Gdx.files.internal("core/assets/shaders/fragmentLighting3D.frag").readString();
-
+		if(Gdx.app.getType() == Application.ApplicationType.Android){
+			vertexShaderString = Gdx.files.internal("shaders/fragmentLighting3D.vert").readString();
+			fragmentShaderString =  Gdx.files.internal("shaders/fragmentLighting3D.frag").readString();
+		}
+		else{
+			vertexShaderString = Gdx.files.internal("core/assets/shaders/fragmentLighting3D.vert").readString();
+			fragmentShaderString =  Gdx.files.internal("core/assets/shaders/fragmentLighting3D.frag").readString();
+		}
 
 		vertexShaderID = Gdx.gl.glCreateShader(GL20.GL_VERTEX_SHADER);
 		fragmentShaderID = Gdx.gl.glCreateShader(GL20.GL_FRAGMENT_SHADER);
